@@ -55,12 +55,12 @@
     },
     "autoload": {
         "psr-4": {
-            "SmartAssert\\UsersClient\\": "src/"
+            "SmartAssert\\ResultsClient\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "SmartAssert\\UsersClient\\Tests\\": "tests/"
+            "SmartAssert\\ResultsClient\\Tests\\": "tests/"
         }
     },
     "require": {
