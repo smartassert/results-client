@@ -1,0 +1,90 @@
+{
+    "name": "smartassert/results-client",
+    "description": "",
+    "keywords": [],
+    "homepage": "https://github.com/smartassert/results-client",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jon Cram",
+            "email": "webignition@gmail.com"
+        }
+    ],
+    "scripts": {
+        "cs-fixer-dry-run": "docker run --rm $(if [ ! -z \"${NO_TTY}\" ]; then echo \"\"; else echo \"-t\"; fi) -w=/app -v ${PWD}:/app oskarstark/php-cs-fixer-ga:latest --allow-risky=yes --dry-run --verbose --show-progress none",
+        "cs-fixer-fix": "docker run --rm $(if [ ! -z \"${NO_TTY}\" ]; then echo \"\"; else echo \"-t\"; fi) -w=/app -v ${PWD}:/app oskarstark/php-cs-fixer-ga:latest --allow-risky=yes --diff",
+        "cs-phpcs": "./vendor/bin/phpcs",
+        "cs": [
+            "@cs-fixer-dry-run",
+            "@cs-phpcs"
+        ],
+        "static-analysis": "./vendor/bin/phpstan",
+        "test": [
+            "./vendor/bin/phpunit --colors=always tests/Unit",
+            "./vendor/bin/phpunit --colors=always tests/Functional"
+        ],
+        "test-integration": "./vendor/bin/phpunit --colors=always tests/Integration",
+        "ci": [
+            "@composer cs",
+            "@composer static-analysis",
+            "@composer test"
+        ],
+        "users-db-setup": [
+            "docker-compose -f ./tests/Integration/build/docker-compose.yml exec -T users-service php bin/console doctrine:database:create --if-not-exists",
+            "docker-compose -f ./tests/Integration/build/docker-compose.yml exec -T users-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration"
+        ],
+        "users-generate-jwt-keys": "docker-compose -f ./tests/Integration/build/docker-compose.yml exec -T users-service php bin/console lexik:jwt:generate-keypair --overwrite --no-interaction",
+        "users-create-user": "curl --header 'Authorization: primary_admin_token' --data 'email=user@example.com&password=password' http://localhost:9080/admin/user/create",
+        "users-setup": [
+            "@users-db-setup",
+            "@users-generate-jwt-keys",
+            "@users-create-user"
+        ],
+        "integration-up": "docker-compose -f tests/Integration/build/docker-compose.yml  up -d",
+        "integration-status": "docker-compose -f tests/Integration/build/docker-compose.yml ps",
+        "integration-logs": "docker-compose -f tests/Integration/build/docker-compose.yml logs",
+        "integration-setup": [
+            "@integration-up",
+            "sleep 2",
+            "@users-setup"
+        ],
+        "integration-teardown": [
+            "docker-compose -f ./tests/Integration/build/docker-compose.yml down"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "SmartAssert\\UsersClient\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SmartAssert\\UsersClient\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "psr/http-client": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/http-factory": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.6",
+        "phpstan/phpstan": "^1.8",
+        "guzzlehttp/guzzle": "^7.4",
+        "webignition/http-history-container": "^2.4",
+        "symfony/uid": "^6.1",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "lcobucci/jwt": "^4.2"
+    },
+    "minimum-stability":"stable",
+    "prefer-stable":true,
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    }
+}
