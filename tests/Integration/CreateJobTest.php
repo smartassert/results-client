@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Tests\Integration;
 
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Psr7\HttpFactory;
 use SmartAssert\ResultsClient\Model\Job;
-use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\UsersClient\Client as UsersClient;
 use SmartAssert\UsersClient\Model\ApiKey;
 use SmartAssert\UsersClient\Model\Token;
@@ -23,10 +20,7 @@ class CreateJobTest extends AbstractIntegrationTest
     {
         parent::setUp();
 
-        $httpFactory = new HttpFactory();
-        $serviceClient = new ServiceClient($httpFactory, $httpFactory, new HttpClient());
-
-        $this->usersClient = new UsersClient('http://localhost:9080', $serviceClient, new UsersObjectFactory());
+        $this->usersClient = new UsersClient('http://localhost:9080', $this->serviceClient, new UsersObjectFactory());
     }
 
     public function testCreateSuccess(): void
