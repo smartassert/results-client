@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71b2242e10a0ea6d4d4404f899709b3d",
+    "content-hash": "eeaff4e3ce4fd2ce4b4ec6cc83afd897",
     "packages": [
         {
             "name": "psr/http-client",
@@ -2657,6 +2657,60 @@
                 }
             ],
             "time": "2020-09-28T06:39:44+00:00"
+        },
+        {
+            "name": "smartassert/users-client",
+            "version": "0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smartassert/users-client.git",
+                "reference": "7aacd8cb2d9724ccab1758250de9f51172166c52"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/smartassert/users-client/zipball/7aacd8cb2d9724ccab1758250de9f51172166c52",
+                "reference": "7aacd8cb2d9724ccab1758250de9f51172166c52",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.4",
+                "lcobucci/jwt": "^4.2",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan-phpunit": "^1.1",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.6",
+                "symfony/uid": "^6.1",
+                "webignition/http-history-container": "^2.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SmartAssert\\UsersClient\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "webignition@gmail.com"
+                }
+            ],
+            "homepage": "https://github.com/smartassert/users-client",
+            "support": {
+                "issues": "https://github.com/smartassert/users-client/issues",
+                "source": "https://github.com/smartassert/users-client/tree/0.3"
+            },
+            "time": "2022-09-07T14:57:39+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
