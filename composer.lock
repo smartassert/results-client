@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eeaff4e3ce4fd2ce4b4ec6cc83afd897",
+    "content-hash": "b545ac3857758201cfc9b4521036adc6",
     "packages": [
         {
             "name": "psr/http-client",
@@ -2660,26 +2660,27 @@
         },
         {
             "name": "smartassert/users-client",
-            "version": "0.3",
+            "version": "1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smartassert/users-client.git",
-                "reference": "7aacd8cb2d9724ccab1758250de9f51172166c52"
+                "reference": "2aba2d656efa3c58a4325e4fcb5ab4333279b985"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smartassert/users-client/zipball/7aacd8cb2d9724ccab1758250de9f51172166c52",
-                "reference": "7aacd8cb2d9724ccab1758250de9f51172166c52",
+                "url": "https://api.github.com/repos/smartassert/users-client/zipball/2aba2d656efa3c58a4325e4fcb5ab4333279b985",
+                "reference": "2aba2d656efa3c58a4325e4fcb5ab4333279b985",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^1.0",
+                "smartassert/service-client": "^0.1.0"
             },
             "require-dev": {
-                "guzzlehttp/guzzle": "^7.4",
+                "guzzlehttp/guzzle": "^7.5",
                 "lcobucci/jwt": "^4.2",
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpstan": "^1.8",
@@ -2708,9 +2709,9 @@
             "homepage": "https://github.com/smartassert/users-client",
             "support": {
                 "issues": "https://github.com/smartassert/users-client/issues",
-                "source": "https://github.com/smartassert/users-client/tree/0.3"
+                "source": "https://github.com/smartassert/users-client/tree/1.0"
             },
-            "time": "2022-09-07T14:57:39+00:00"
+            "time": "2022-09-26T09:07:18+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",

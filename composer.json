@@ -78,7 +78,7 @@
         "symfony/uid": "^6.1",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-phpunit": "^1.1",
-        "smartassert/users-client": "^0.3.0"
+        "smartassert/users-client": "^1.0"
     },
     "minimum-stability":"stable",
     "prefer-stable":true,
