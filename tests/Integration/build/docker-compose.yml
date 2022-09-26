@@ -37,7 +37,7 @@ services:
     container_name: results-service
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/results?serverVersion=12&charset=utf8
-      AUTHENTICATION_BASE_URL: https://users-http/
+      AUTHENTICATION_BASE_URL: http://users-http
       IS_READY: 1
     depends_on:
       - postgres
