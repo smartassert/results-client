@@ -74,7 +74,7 @@
         "psr/http-client": "^1.0",
         "psr/http-message": "^1.0",
         "psr/http-factory": "^1.0",
-        "smartassert/service-client": ">=0.1,<1"
+        "smartassert/service-client": ">=0.2,<1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
@@ -84,7 +84,7 @@
         "symfony/uid": "^6.1",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-phpunit": "^1.1",
-        "smartassert/users-client": "^1.0"
+        "smartassert/users-client": ">=1.1,<2"
     },
     "minimum-stability":"stable",
     "prefer-stable":true,
