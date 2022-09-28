@@ -21,8 +21,10 @@ use Symfony\Component\Uid\Ulid;
 
 abstract class AbstractIntegrationTest extends TestCase
 {
-    protected const USER_EMAIL = 'user@example.com';
-    protected const USER_PASSWORD = 'password';
+    protected const USER1_EMAIL = 'user1@example.com';
+    protected const USER1_PASSWORD = 'password';
+    protected const USER2_EMAIL = 'user1@example.com';
+    protected const USER2_PASSWORD = 'password';
 
     protected static Client $client;
 
@@ -40,7 +42,7 @@ abstract class AbstractIntegrationTest extends TestCase
         $usersClient = new UsersClient('http://localhost:9080', $serviceClient, new UsersObjectFactory());
         self::$client = new Client('http://localhost:9081', $serviceClient, new ObjectFactory());
 
-        $frontendToken = $usersClient->createFrontendToken(self::USER_EMAIL, self::USER_PASSWORD);
+        $frontendToken = $usersClient->createFrontendToken(self::USER1_EMAIL, self::USER1_PASSWORD);
         \assert($frontendToken instanceof Token);
 
         $frontendTokenUser = $usersClient->verifyFrontendToken($frontendToken);
