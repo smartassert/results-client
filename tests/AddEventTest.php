@@ -36,8 +36,8 @@ class AddEventTest extends AbstractIntegrationTest
      */
     public function testAddSuccess(Event $event, callable $expectedJobEventCreator): void
     {
-        $jobEvent = self::$client->addEvent(self::$job->token, $event);
-        self::assertEquals($expectedJobEventCreator(self::$jobLabel), $jobEvent);
+        $jobEvent = self::$client->addEvent(self::$user1Job->token, $event);
+        self::assertEquals($expectedJobEventCreator(self::$user1JobLabel), $jobEvent);
     }
 
     /**
