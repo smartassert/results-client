@@ -36,13 +36,24 @@ abstract class AbstractIntegrationTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        $httpFactory = new HttpFactory();
-        $serviceClient = new ServiceClient($httpFactory, $httpFactory, new HttpClient(), new ResponseDecoder());
+        self::$client = new Client('http://localhost:9081', self::createServiceClient(), new ObjectFactory());
 
-        $usersClient = new UsersClient('http://localhost:9080', $serviceClient, new UsersObjectFactory());
-        self::$client = new Client('http://localhost:9081', $serviceClient, new ObjectFactory());
+        $apiToken = self::createUserApiToken(self::USER1_EMAIL, self::USER1_PASSWORD);
 
-        $frontendToken = $usersClient->createFrontendToken(self::USER1_EMAIL, self::USER1_PASSWORD);
+        $jobLabel = (string) new Ulid();
+        \assert('' !== $jobLabel);
+        self::$jobLabel = $jobLabel;
+
+        $job = self::$client->createJob($apiToken->token, $jobLabel);
+        \assert($job instanceof Job);
+        self::$job = $job;
+    }
+
+    protected static function createUserApiToken(string $email, string $password): Token
+    {
+        $usersClient = new UsersClient('http://localhost:9080', self::createServiceClient(), new UsersObjectFactory());
+
+        $frontendToken = $usersClient->createFrontendToken($email, $password);
         \assert($frontendToken instanceof Token);
 
         $frontendTokenUser = $usersClient->verifyFrontendToken($frontendToken);
@@ -58,12 +69,13 @@ abstract class AbstractIntegrationTest extends TestCase
         $apiTokenUser = $usersClient->verifyApiToken($apiToken);
         \assert($apiTokenUser instanceof User);
 
-        $jobLabel = (string) new Ulid();
-        \assert('' !== $jobLabel);
-        self::$jobLabel = $jobLabel;
+        return $apiToken;
+    }
 
-        $job = self::$client->createJob($apiToken->token, $jobLabel);
-        \assert($job instanceof Job);
-        self::$job = $job;
+    private static function createServiceClient(): ServiceClient
+    {
+        $httpFactory = new HttpFactory();
+
+        return new ServiceClient($httpFactory, $httpFactory, new HttpClient(), new ResponseDecoder());
     }
 }
