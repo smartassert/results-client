@@ -9,32 +9,16 @@ use SmartAssert\ResultsClient\Model\Event\Event;
 use SmartAssert\ResultsClient\Model\Event\JobEvent;
 use SmartAssert\ResultsClient\Model\Event\ResourceReference;
 use SmartAssert\ResultsClient\Model\Event\ResourceReferenceCollection;
-use SmartAssert\ResultsClient\Model\Job;
-use SmartAssert\UsersClient\Client as UsersClient;
-use SmartAssert\UsersClient\Model\ApiKey;
-use SmartAssert\UsersClient\Model\Token;
-use SmartAssert\UsersClient\Model\User;
-use SmartAssert\UsersClient\ObjectFactory as UsersObjectFactory;
-use Symfony\Component\Uid\Ulid;
 
 class AddEventTest extends AbstractIntegrationTest
 {
-    private UsersClient $usersClient;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->usersClient = new UsersClient('http://localhost:9080', $this->serviceClient, new UsersObjectFactory());
-    }
-
     public function testAddInvalidJobToken(): void
     {
         $jobToken = 'invalid token';
 
         self::expectExceptionObject(new InvalidJobTokenException($jobToken));
 
-        $this->client->addEvent(
+        self::$client->addEvent(
             $jobToken,
             new Event(
                 1,
@@ -52,30 +36,8 @@ class AddEventTest extends AbstractIntegrationTest
      */
     public function testAddSuccess(Event $event, callable $expectedJobEventCreator): void
     {
-        $frontendToken = $this->usersClient->createFrontendToken(self::USER_EMAIL, self::USER_PASSWORD);
-        \assert($frontendToken instanceof Token);
-
-        $frontendTokenUser = $this->usersClient->verifyFrontendToken($frontendToken);
-        \assert($frontendTokenUser instanceof User);
-
-        $apiKeys = $this->usersClient->listUserApiKeys($frontendToken);
-        $defaultApiKey = $apiKeys->getDefault();
-        \assert($defaultApiKey instanceof ApiKey);
-
-        $apiToken = $this->usersClient->createApiToken($defaultApiKey->key);
-        \assert($apiToken instanceof Token);
-
-        $apiTokenUser = $this->usersClient->verifyApiToken($apiToken);
-        \assert($apiTokenUser instanceof User);
-
-        $label = (string) new Ulid();
-        \assert('' !== $label);
-
-        $job = $this->client->createJob($apiToken->token, $label);
-        \assert($job instanceof Job);
-
-        $jobEvent = $this->client->addEvent($job->token, $event);
-        self::assertEquals($expectedJobEventCreator($label), $jobEvent);
+        $jobEvent = self::$client->addEvent(self::$job->token, $event);
+        self::assertEquals($expectedJobEventCreator(self::$jobLabel), $jobEvent);
     }
 
     /**
@@ -105,9 +67,9 @@ class AddEventTest extends AbstractIntegrationTest
             ],
             'without related references, non-empty body' => [
                 'event' => new Event(
-                    1,
+                    2,
                     'event_type',
-                    new ResourceReference('event_label_1', 'event_reference_1'),
+                    new ResourceReference('event_label_2', 'event_reference_2'),
                     [
                         'key1' => 'value1',
                         'key2' => 'value2',
@@ -117,9 +79,9 @@ class AddEventTest extends AbstractIntegrationTest
                     return new JobEvent(
                         $jobLabel,
                         new Event(
-                            1,
+                            2,
                             'event_type',
-                            new ResourceReference('event_label_1', 'event_reference_1'),
+                            new ResourceReference('event_label_2', 'event_reference_2'),
                             [
                                 'key1' => 'value1',
                                 'key2' => 'value2',
@@ -130,9 +92,9 @@ class AddEventTest extends AbstractIntegrationTest
             ],
             'with single related reference, empty body' => [
                 'event' => new Event(
-                    1,
+                    3,
                     'event_type',
-                    new ResourceReference('event_label_1', 'event_reference_1'),
+                    new ResourceReference('event_label_3', 'event_reference_3'),
                     [],
                     new ResourceReferenceCollection([
                         new ResourceReference('event_label_1', 'event_reference_1'),
@@ -142,9 +104,9 @@ class AddEventTest extends AbstractIntegrationTest
                     return new JobEvent(
                         $jobLabel,
                         new Event(
-                            1,
+                            3,
                             'event_type',
-                            new ResourceReference('event_label_1', 'event_reference_1'),
+                            new ResourceReference('event_label_3', 'event_reference_3'),
                             [],
                             new ResourceReferenceCollection([
                                 new ResourceReference('event_label_1', 'event_reference_1'),
@@ -155,9 +117,9 @@ class AddEventTest extends AbstractIntegrationTest
             ],
             'with multiple related references, non-empty body' => [
                 'event' => new Event(
-                    1,
+                    4,
                     'event_type',
-                    new ResourceReference('event_label_1', 'event_reference_1'),
+                    new ResourceReference('event_label_4', 'event_reference_4'),
                     [
                         'key3' => 'value3',
                         'key4' => 'value4',
@@ -170,9 +132,9 @@ class AddEventTest extends AbstractIntegrationTest
                     return new JobEvent(
                         $jobLabel,
                         new Event(
-                            1,
+                            4,
                             'event_type',
-                            new ResourceReference('event_label_1', 'event_reference_1'),
+                            new ResourceReference('event_label_4', 'event_reference_4'),
                             [
                                 'key3' => 'value3',
                                 'key4' => 'value4',
