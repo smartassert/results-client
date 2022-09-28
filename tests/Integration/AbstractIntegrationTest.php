@@ -25,7 +25,6 @@ abstract class AbstractIntegrationTest extends TestCase
     protected const USER_PASSWORD = 'password';
 
     protected static Client $client;
-    protected static UsersClient $usersClient;
 
     /**
      * @var non-empty-string
@@ -38,23 +37,23 @@ abstract class AbstractIntegrationTest extends TestCase
         $httpFactory = new HttpFactory();
         $serviceClient = new ServiceClient($httpFactory, $httpFactory, new HttpClient(), new ResponseDecoder());
 
-        self::$usersClient = new UsersClient('http://localhost:9080', $serviceClient, new UsersObjectFactory());
+        $usersClient = new UsersClient('http://localhost:9080', $serviceClient, new UsersObjectFactory());
         self::$client = new Client('http://localhost:9081', $serviceClient, new ObjectFactory());
 
-        $frontendToken = self::$usersClient->createFrontendToken(self::USER_EMAIL, self::USER_PASSWORD);
+        $frontendToken = $usersClient->createFrontendToken(self::USER_EMAIL, self::USER_PASSWORD);
         \assert($frontendToken instanceof Token);
 
-        $frontendTokenUser = self::$usersClient->verifyFrontendToken($frontendToken);
+        $frontendTokenUser = $usersClient->verifyFrontendToken($frontendToken);
         \assert($frontendTokenUser instanceof User);
 
-        $apiKeys = self::$usersClient->listUserApiKeys($frontendToken);
+        $apiKeys = $usersClient->listUserApiKeys($frontendToken);
         $defaultApiKey = $apiKeys->getDefault();
         \assert($defaultApiKey instanceof ApiKey);
 
-        $apiToken = self::$usersClient->createApiToken($defaultApiKey->key);
+        $apiToken = $usersClient->createApiToken($defaultApiKey->key);
         \assert($apiToken instanceof Token);
 
-        $apiTokenUser = self::$usersClient->verifyApiToken($apiToken);
+        $apiTokenUser = $usersClient->verifyApiToken($apiToken);
         \assert($apiTokenUser instanceof User);
 
         $jobLabel = (string) new Ulid();
