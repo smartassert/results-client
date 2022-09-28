@@ -27,26 +27,26 @@ abstract class AbstractIntegrationTest extends TestCase
     protected const USER2_PASSWORD = 'password';
 
     protected static Client $client;
+    protected static Token $user1ApiToken;
 
     /**
      * @var non-empty-string
      */
-    protected static string $jobLabel;
-    protected static Job $job;
+    protected static string $user1JobLabel;
+    protected static Job $user1Job;
 
     public static function setUpBeforeClass(): void
     {
         self::$client = new Client('http://localhost:9081', self::createServiceClient(), new ObjectFactory());
-
-        $apiToken = self::createUserApiToken(self::USER1_EMAIL, self::USER1_PASSWORD);
+        self::$user1ApiToken = self::createUserApiToken(self::USER1_EMAIL, self::USER1_PASSWORD);
 
         $jobLabel = (string) new Ulid();
         \assert('' !== $jobLabel);
-        self::$jobLabel = $jobLabel;
+        self::$user1JobLabel = $jobLabel;
 
-        $job = self::$client->createJob($apiToken->token, $jobLabel);
+        $job = self::$client->createJob(self::$user1ApiToken->token, $jobLabel);
         \assert($job instanceof Job);
-        self::$job = $job;
+        self::$user1Job = $job;
     }
 
     protected static function createUserApiToken(string $email, string $password): Token

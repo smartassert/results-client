@@ -52,13 +52,13 @@ class Client
      * @throws NonSuccessResponseException
      * @throws InvalidJobTokenException
      */
-    public function addEvent(string $jobToken, Event $request): ?JobEvent
+    public function addEvent(string $jobToken, Event $event): ?JobEvent
     {
         try {
             $responseData = $this->serviceClient->sendRequestForJsonEncodedData(
                 (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
                     ->withAuthentication(new BearerAuthentication($jobToken))
-                    ->withPayload(new JsonPayload($request))
+                    ->withPayload(new JsonPayload($event))
             );
         } catch (NonSuccessResponseException $nonSuccessResponseException) {
             if (404 === $nonSuccessResponseException->getCode()) {
@@ -69,6 +69,40 @@ class Client
         }
 
         return $this->objectFactory->createJobEventFromArray($responseData);
+    }
+
+    /**
+     * @param non-empty-string $token
+     * @param non-empty-string $jobLabel
+     * @param non-empty-string $eventReference
+     *
+     * @return JobEvent[]
+     *
+     * @throws ClientExceptionInterface
+     * @throws InvalidResponseContentException
+     * @throws InvalidResponseDataException
+     * @throws NonSuccessResponseException
+     */
+    public function listEvents(string $token, string $jobLabel, string $eventReference): array
+    {
+        $responseData = $this->serviceClient->sendRequestForJsonEncodedData(
+            (new Request('GET', $this->createUrl('/event/list/' . $jobLabel . '/' . $eventReference)))
+                ->withAuthentication(new BearerAuthentication($token))
+        );
+
+        $events = [];
+
+        foreach ($responseData as $eventData) {
+            if (is_array($eventData)) {
+                $event = $this->objectFactory->createJobEventFromArray($eventData);
+
+                if ($event instanceof JobEvent) {
+                    $events[] = $event;
+                }
+            }
+        }
+
+        return $events;
     }
 
     /**
