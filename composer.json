@@ -20,16 +20,7 @@
             "@cs-phpcs"
         ],
         "static-analysis": "./vendor/bin/phpstan",
-        "test": [
-            "./vendor/bin/phpunit --colors=always tests/Unit",
-            "./vendor/bin/phpunit --colors=always tests/Functional"
-        ],
-        "test-integration": "./vendor/bin/phpunit --colors=always tests/Integration",
-        "ci": [
-            "@composer cs",
-            "@composer static-analysis",
-            "@composer test"
-        ],
+        "test": "./vendor/bin/phpunit --colors=always tests/Integration",
         "users-db-setup": [
             "docker-compose -f ./tests/Integration/build/docker-compose.yml exec -T users-service php bin/console doctrine:database:create --if-not-exists",
             "docker-compose -f ./tests/Integration/build/docker-compose.yml exec -T users-service php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration"
