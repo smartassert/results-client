@@ -8,5 +8,5 @@
 
     <rule ref="PSR12"/>
 
-    <exclude-pattern>tests/Integration/build/*</exclude-pattern>
+    <exclude-pattern>tests/build/*</exclude-pattern>
 </ruleset>
