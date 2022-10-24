@@ -11,6 +11,7 @@ use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\ObjectFactory;
 use SmartAssert\SecurityTokenExtractor\TokenExtractor;
+use SmartAssert\ServiceClient\ArrayAccessor;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\RequestFactory;
 use SmartAssert\ServiceClient\ResponseDecoder;
@@ -42,7 +43,9 @@ abstract class AbstractIntegrationTest extends TestCase
         self::$client = new Client(
             'http://localhost:9081',
             self::createServiceClient(),
-            new ObjectFactory(),
+            new ObjectFactory(
+                new ArrayAccessor()
+            ),
             new RequestFactory(
                 new TokenExtractor()
             ),
