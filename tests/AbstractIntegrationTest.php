@@ -10,10 +10,8 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\ObjectFactory;
-use SmartAssert\SecurityTokenExtractor\TokenExtractor;
 use SmartAssert\ServiceClient\ArrayAccessor;
 use SmartAssert\ServiceClient\Client as ServiceClient;
-use SmartAssert\ServiceClient\RequestFactory;
 use SmartAssert\ServiceClient\ResponseDecoder;
 use SmartAssert\UsersClient\Client as UsersClient;
 use SmartAssert\UsersClient\Model\ApiKey;
@@ -45,9 +43,6 @@ abstract class AbstractIntegrationTest extends TestCase
             self::createServiceClient(),
             new ObjectFactory(
                 new ArrayAccessor()
-            ),
-            new RequestFactory(
-                new TokenExtractor()
             ),
         );
         self::$user1ApiToken = self::createUserApiToken(self::USER1_EMAIL, self::USER1_PASSWORD);
