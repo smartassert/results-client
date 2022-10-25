@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient;
 
 use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\RequestInterface;
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event\Event;
 use SmartAssert\ResultsClient\Model\Event\JobEvent;
@@ -17,7 +16,6 @@ use SmartAssert\ServiceClient\Exception\InvalidResponseDataException;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\Payload\JsonPayload;
 use SmartAssert\ServiceClient\Request;
-use SmartAssert\ServiceClient\RequestFactory;
 
 class Client
 {
@@ -25,7 +23,6 @@ class Client
         private readonly string $baseUrl,
         private readonly ServiceClient $serviceClient,
         private readonly ObjectFactory $objectFactory,
-        private readonly RequestFactory $requestFactory,
     ) {
     }
 
@@ -40,20 +37,12 @@ class Client
      */
     public function createJob(string $token, string $label): ?Job
     {
-        return $this->doCreateJob($this->createCreateJobRequest($token, $label));
-    }
+        $responseData = $this->serviceClient->sendRequestForJsonEncodedData(
+            (new Request('POST', $this->createUrl('/job/' . $label)))
+                ->withAuthentication(new BearerAuthentication($token))
+        );
 
-    /**
-     * @param non-empty-string $label
-     *
-     * @throws ClientExceptionInterface
-     * @throws InvalidResponseContentException
-     * @throws InvalidResponseDataException
-     * @throws NonSuccessResponseException
-     */
-    public function createJobWithAuthenticationFromHttpRequest(RequestInterface $httpRequest, string $label): ?Job
-    {
-        return $this->doCreateJob($this->createCreateJobRequest($httpRequest, $label));
+        return $this->objectFactory->createJobFromArray($responseData);
     }
 
     /**
@@ -114,36 +103,6 @@ class Client
         }
 
         return $events;
-    }
-
-    /**
-     * @throws ClientExceptionInterface
-     * @throws InvalidResponseContentException
-     * @throws InvalidResponseDataException
-     * @throws NonSuccessResponseException
-     */
-    private function doCreateJob(Request $request): ?Job
-    {
-        $responseData = $this->serviceClient->sendRequestForJsonEncodedData($request);
-
-        return $this->objectFactory->createJobFromArray($responseData);
-    }
-
-    /**
-     * @param non-empty-string $label
-     */
-    private function createCreateJobRequest(string|RequestInterface $authenticationHolder, string $label): Request
-    {
-        $method = 'POST';
-        $url = $this->createUrl('/job/' . $label);
-
-        return $authenticationHolder instanceof RequestInterface
-            ? $this->requestFactory->createWithAuthenticationFromHttpRequest(
-                $method,
-                $url,
-                $authenticationHolder
-            )
-            : (new Request($method, $url))->withAuthentication(new BearerAuthentication($authenticationHolder));
     }
 
     /**
