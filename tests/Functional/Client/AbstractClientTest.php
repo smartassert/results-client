@@ -18,10 +18,8 @@ use SmartAssert\ResultsClient\ObjectFactory;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\CommonNonSuccessResponseDataProviderTrait;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\InvalidJsonResponseExceptionDataProviderTrait;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\NetworkErrorExceptionDataProviderTrait;
-use SmartAssert\ServiceClient\ArrayAccessor;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
-use SmartAssert\ServiceClient\ResponseDecoder;
 use webignition\HttpHistoryContainer\Container as HttpHistoryContainer;
 
 abstract class AbstractClientTest extends TestCase
@@ -53,11 +51,8 @@ abstract class AbstractClientTest extends TestCase
                 $httpFactory,
                 $httpFactory,
                 new HttpClient(['handler' => $handlerStack]),
-                new ResponseDecoder(),
             ),
-            new ObjectFactory(
-                new ArrayAccessor(),
-            )
+            new ObjectFactory()
         );
     }
 

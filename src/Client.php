@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient;
 
 use Psr\Http\Client\ClientExceptionInterface;
+use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event\Event;
 use SmartAssert\ResultsClient\Model\Event\JobEvent;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
+use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
 use SmartAssert\ServiceClient\Exception\InvalidResponseContentException;
 use SmartAssert\ServiceClient\Exception\InvalidResponseDataException;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
@@ -34,15 +36,29 @@ class Client
      * @throws InvalidResponseContentException
      * @throws InvalidResponseDataException
      * @throws NonSuccessResponseException
+     * @throws InvalidModelDataException
      */
-    public function createJob(string $token, string $label): ?Job
+    public function createJob(string $token, string $label): Job
     {
-        $responseData = $this->serviceClient->sendRequestForJsonEncodedData(
+        $response = $this->serviceClient->sendRequestForJsonEncodedData(
             (new Request('POST', $this->createUrl('/job/' . $label)))
                 ->withAuthentication(new BearerAuthentication($token))
         );
 
-        return $this->objectFactory->createJobFromArray($responseData);
+        if (!$response->isSuccessful()) {
+            throw new NonSuccessResponseException($response->getHttpResponse());
+        }
+
+        $responseDataInspector = new ArrayInspector($response->getData());
+
+        $label = $responseDataInspector->getNonEmptyString('label');
+        $token = $responseDataInspector->getNonEmptyString('token');
+
+        if (null === $label || null === $token) {
+            throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
+        }
+
+        return new Job($label, $token);
     }
 
     /**
@@ -51,24 +67,33 @@ class Client
      * @throws InvalidResponseDataException
      * @throws NonSuccessResponseException
      * @throws InvalidJobTokenException
+     * @throws InvalidModelDataException
      */
     public function addEvent(string $jobToken, Event $event): ?JobEvent
     {
-        try {
-            $responseData = $this->serviceClient->sendRequestForJsonEncodedData(
-                (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
-                    ->withAuthentication(new BearerAuthentication($jobToken))
-                    ->withPayload(new JsonPayload($event))
-            );
-        } catch (NonSuccessResponseException $nonSuccessResponseException) {
-            if (404 === $nonSuccessResponseException->getCode()) {
+        $response = $this->serviceClient->sendRequestForJsonEncodedData(
+            (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
+                ->withAuthentication(new BearerAuthentication($jobToken))
+                ->withPayload(new JsonPayload($event))
+        );
+
+        if (!$response->isSuccessful()) {
+            if (404 === $response->getStatusCode()) {
                 throw new InvalidJobTokenException($jobToken);
             }
 
-            throw $nonSuccessResponseException;
+            throw new NonSuccessResponseException($response->getHttpResponse());
         }
 
-        return $this->objectFactory->createJobEventFromArray($responseData);
+        $responseDataInspector = new ArrayInspector($response->getData());
+
+        $jobEvent = $this->objectFactory->createJobEvent($responseDataInspector);
+
+        if (null === $jobEvent) {
+            throw InvalidModelDataException::fromJsonResponse(JobEvent::class, $response);
+        }
+
+        return $jobEvent;
     }
 
     /**
@@ -85,22 +110,30 @@ class Client
      */
     public function listEvents(string $token, string $jobLabel, string $eventReference): array
     {
-        $responseData = $this->serviceClient->sendRequestForJsonEncodedData(
+        $response = $this->serviceClient->sendRequestForJsonEncodedData(
             (new Request('GET', $this->createUrl('/event/list/' . $jobLabel . '/' . $eventReference)))
                 ->withAuthentication(new BearerAuthentication($token))
         );
 
+        if (!$response->isSuccessful()) {
+            throw new NonSuccessResponseException($response->getHttpResponse());
+        }
+
         $events = [];
 
-        foreach ($responseData as $eventData) {
-            if (is_array($eventData)) {
-                $event = $this->objectFactory->createJobEventFromArray($eventData);
+        $responseDataInspector = new ArrayInspector($response->getData());
 
-                if ($event instanceof JobEvent) {
-                    $events[] = $event;
+        $responseDataInspector->each(function (int|string $key, mixed $value) use (&$events) {
+            if (is_array($value)) {
+                $eventDataInspector = new ArrayInspector($value);
+
+                $jobEvent = $this->objectFactory->createJobEvent($eventDataInspector);
+
+                if ($jobEvent instanceof JobEvent) {
+                    $events[] = $jobEvent;
                 }
             }
-        }
+        });
 
         return $events;
     }

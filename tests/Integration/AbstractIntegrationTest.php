@@ -10,14 +10,11 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\ObjectFactory;
-use SmartAssert\ServiceClient\ArrayAccessor;
 use SmartAssert\ServiceClient\Client as ServiceClient;
-use SmartAssert\ServiceClient\ResponseDecoder;
 use SmartAssert\UsersClient\Client as UsersClient;
 use SmartAssert\UsersClient\Model\ApiKey;
 use SmartAssert\UsersClient\Model\Token;
 use SmartAssert\UsersClient\Model\User;
-use SmartAssert\UsersClient\ObjectFactory as UsersObjectFactory;
 use Symfony\Component\Uid\Ulid;
 
 abstract class AbstractIntegrationTest extends TestCase
@@ -41,9 +38,7 @@ abstract class AbstractIntegrationTest extends TestCase
         self::$client = new Client(
             'http://localhost:9081',
             self::createServiceClient(),
-            new ObjectFactory(
-                new ArrayAccessor()
-            ),
+            new ObjectFactory(),
         );
         self::$user1ApiToken = self::createUserApiToken(self::USER1_EMAIL, self::USER1_PASSWORD);
 
@@ -58,7 +53,7 @@ abstract class AbstractIntegrationTest extends TestCase
 
     protected static function createUserApiToken(string $email, string $password): Token
     {
-        $usersClient = new UsersClient('http://localhost:9080', self::createServiceClient(), new UsersObjectFactory());
+        $usersClient = new UsersClient('http://localhost:9080', self::createServiceClient());
 
         $frontendToken = $usersClient->createFrontendToken($email, $password);
         \assert($frontendToken instanceof Token);
@@ -83,6 +78,6 @@ abstract class AbstractIntegrationTest extends TestCase
     {
         $httpFactory = new HttpFactory();
 
-        return new ServiceClient($httpFactory, $httpFactory, new HttpClient(), new ResponseDecoder());
+        return new ServiceClient($httpFactory, $httpFactory, new HttpClient());
     }
 }

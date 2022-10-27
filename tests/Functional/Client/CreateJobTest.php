@@ -8,19 +8,24 @@ use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\Job;
 
-class CreateJobTest extends AbstractClientTest
+class CreateJobTest extends AbstractClientModelCreationTest
 {
     public function testCreateJobRequestProperties(): void
     {
+        $jobLabel = 'job label';
+
         $this->mockHandler->append(new Response(
             200,
             ['content-type' => 'application/json'],
-            (string) json_encode([])
+            (string) json_encode([
+                'label' => $jobLabel,
+                'token' => 'job token',
+            ])
         ));
 
         $apiKey = 'api key value';
 
-        $this->client->createJob($apiKey, 'label');
+        $this->client->createJob($apiKey, $jobLabel);
 
         $request = $this->getLastRequest();
         self::assertSame('POST', $request->getMethod());
@@ -68,5 +73,10 @@ class CreateJobTest extends AbstractClientTest
         return function () {
             $this->client->createJob('api token', 'label');
         };
+    }
+
+    protected function getExpectedModelClass(): string
+    {
+        return Job::class;
     }
 }
