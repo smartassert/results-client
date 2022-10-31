@@ -5,61 +5,13 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 
 use GuzzleHttp\Psr7\Response;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\Event\Event;
 use SmartAssert\ResultsClient\Model\Event\JobEvent;
 use SmartAssert\ResultsClient\Model\Event\ResourceReference;
-use SmartAssert\ResultsClient\Tests\Functional\DataProvider\CommonNonSuccessResponseDataProviderTrait;
-use SmartAssert\ResultsClient\Tests\Functional\DataProvider\InvalidJsonResponseExceptionDataProviderTrait;
-use SmartAssert\ResultsClient\Tests\Functional\DataProvider\NetworkErrorExceptionDataProviderTrait;
-use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 
 class AddEventTest extends AbstractClientTest
 {
-    use CommonNonSuccessResponseDataProviderTrait;
-    use InvalidJsonResponseExceptionDataProviderTrait;
-    use NetworkErrorExceptionDataProviderTrait;
-
-    /**
-     * @dataProvider networkErrorExceptionDataProvider
-     * @dataProvider invalidJsonResponseExceptionDataProvider
-     *
-     * @param class-string<\Throwable> $expectedExceptionClass
-     */
-    public function testAddEventThrowsException(
-        ResponseInterface|ClientExceptionInterface $httpFixture,
-        string $expectedExceptionClass,
-    ): void {
-        $this->mockHandler->append($httpFixture);
-
-        $this->expectException($expectedExceptionClass);
-
-        $this->client->addEvent(
-            'job token',
-            new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
-        );
-    }
-
-    /**
-     * @dataProvider commonNonSuccessResponseDataProvider
-     */
-    public function testAddEventThrowsNonSuccessResponseException(ResponseInterface $httpFixture): void
-    {
-        $this->mockHandler->append($httpFixture);
-
-        try {
-            $this->client->addEvent(
-                'job token',
-                new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
-            );
-
-            self::fail(NonSuccessResponseException::class . ' not thrown');
-        } catch (NonSuccessResponseException $e) {
-            self::assertSame($httpFixture, $e->response);
-        }
-    }
-
     public function testAddEventRequestProperties(): void
     {
         $this->mockHandler->append(new Response(
@@ -129,5 +81,15 @@ class AddEventTest extends AbstractClientTest
                 'expected' => new JobEvent($jobLabel, $event),
             ],
         ];
+    }
+
+    protected function createClientActionCallable(): callable
+    {
+        return function () {
+            $this->client->addEvent(
+                'job token',
+                new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
+            );
+        };
     }
 }

@@ -10,16 +10,26 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\ObjectFactory;
+use SmartAssert\ResultsClient\Tests\Functional\DataProvider\CommonNonSuccessResponseDataProviderTrait;
+use SmartAssert\ResultsClient\Tests\Functional\DataProvider\InvalidJsonResponseExceptionDataProviderTrait;
+use SmartAssert\ResultsClient\Tests\Functional\DataProvider\NetworkErrorExceptionDataProviderTrait;
 use SmartAssert\ServiceClient\ArrayAccessor;
 use SmartAssert\ServiceClient\Client as ServiceClient;
+use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\ResponseDecoder;
 use webignition\HttpHistoryContainer\Container as HttpHistoryContainer;
 
 abstract class AbstractClientTest extends TestCase
 {
+    use CommonNonSuccessResponseDataProviderTrait;
+    use InvalidJsonResponseExceptionDataProviderTrait;
+    use NetworkErrorExceptionDataProviderTrait;
+
     protected MockHandler $mockHandler;
     protected Client $client;
     private HttpHistoryContainer $httpHistoryContainer;
@@ -51,6 +61,39 @@ abstract class AbstractClientTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider networkErrorExceptionDataProvider
+     * @dataProvider invalidJsonResponseExceptionDataProvider
+     *
+     * @param class-string<\Throwable> $expectedExceptionClass
+     */
+    public function testClientActionThrowsException(
+        ResponseInterface|ClientExceptionInterface $httpFixture,
+        string $expectedExceptionClass,
+    ): void {
+        $this->mockHandler->append($httpFixture);
+
+        $this->expectException($expectedExceptionClass);
+
+        ($this->createClientActionCallable())();
+    }
+
+    /**
+     * @dataProvider commonNonSuccessResponseDataProvider
+     */
+    public function testClientActionThrowsNonSuccessResponseException(ResponseInterface $httpFixture): void
+    {
+        $this->mockHandler->append($httpFixture);
+
+        try {
+            ($this->createClientActionCallable())();
+
+            self::fail(NonSuccessResponseException::class . ' not thrown');
+        } catch (NonSuccessResponseException $e) {
+            self::assertSame($httpFixture, $e->response);
+        }
+    }
+
     protected function getLastRequest(): RequestInterface
     {
         $request = $this->httpHistoryContainer->getTransactions()->getRequests()->getLast();
@@ -58,4 +101,6 @@ abstract class AbstractClientTest extends TestCase
 
         return $request;
     }
+
+    abstract protected function createClientActionCallable(): callable;
 }

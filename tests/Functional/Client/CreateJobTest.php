@@ -5,52 +5,11 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 
 use GuzzleHttp\Psr7\Response;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\Job;
-use SmartAssert\ResultsClient\Tests\Functional\DataProvider\CommonNonSuccessResponseDataProviderTrait;
-use SmartAssert\ResultsClient\Tests\Functional\DataProvider\InvalidJsonResponseExceptionDataProviderTrait;
-use SmartAssert\ResultsClient\Tests\Functional\DataProvider\NetworkErrorExceptionDataProviderTrait;
-use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 
 class CreateJobTest extends AbstractClientTest
 {
-    use CommonNonSuccessResponseDataProviderTrait;
-    use InvalidJsonResponseExceptionDataProviderTrait;
-    use NetworkErrorExceptionDataProviderTrait;
-
-    /**
-     * @dataProvider networkErrorExceptionDataProvider
-     * @dataProvider invalidJsonResponseExceptionDataProvider
-     *
-     * @param class-string<\Throwable> $expectedExceptionClass
-     */
-    public function testCreateJobThrowsException(
-        ResponseInterface|ClientExceptionInterface $httpFixture,
-        string $expectedExceptionClass,
-    ): void {
-        $this->mockHandler->append($httpFixture);
-
-        $this->expectException($expectedExceptionClass);
-
-        $this->client->createJob('user token', 'label');
-    }
-
-    /**
-     * @dataProvider commonNonSuccessResponseDataProvider
-     */
-    public function testCreateJobThrowsNonSuccessResponseException(ResponseInterface $httpFixture): void
-    {
-        $this->mockHandler->append($httpFixture);
-
-        try {
-            $this->client->createJob('user token', 'label');
-            self::fail(NonSuccessResponseException::class . ' not thrown');
-        } catch (NonSuccessResponseException $e) {
-            self::assertSame($httpFixture, $e->response);
-        }
-    }
-
     public function testCreateJobRequestProperties(): void
     {
         $this->mockHandler->append(new Response(
@@ -102,5 +61,12 @@ class CreateJobTest extends AbstractClientTest
                 'expected' => new Job($label, $token),
             ],
         ];
+    }
+
+    protected function createClientActionCallable(): callable
+    {
+        return function () {
+            $this->client->createJob('api token', 'label');
+        };
     }
 }
