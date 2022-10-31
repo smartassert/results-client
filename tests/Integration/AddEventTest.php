@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Tests;
+namespace SmartAssert\ResultsClient\Tests\Integration;
 
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event\Event;

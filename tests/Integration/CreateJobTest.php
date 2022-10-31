@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Tests;
+namespace SmartAssert\ResultsClient\Tests\Integration;
 
 use SmartAssert\ResultsClient\Model\Job;
 use Symfony\Component\Uid\Ulid;
