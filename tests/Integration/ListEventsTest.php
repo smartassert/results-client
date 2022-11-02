@@ -30,11 +30,6 @@ class ListEventsTest extends AbstractIntegrationTest
         $job = self::$client->createJob(self::$user2ApiToken->token, self::$user2JobLabel);
         \assert($job instanceof Job);
         self::$user2Job = $job;
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
 
         $user1Test1Reference = new ResourceReference('user1test1.yml', md5('user1test1.yml'));
         $user1Test2Reference = new ResourceReference('user1test2.yml', md5('user1test2.yml'));
