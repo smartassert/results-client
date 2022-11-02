@@ -20,7 +20,7 @@ class ObjectFactory
         return null === $jobLabel || null === $event ? null : new JobEvent($jobLabel, $event);
     }
 
-    public function createEvent(ArrayInspector $data): ?Event
+    private function createEvent(ArrayInspector $data): ?Event
     {
         $sequenceNumber = $data->getPositiveInteger('sequence_number');
         $type = $data->getNonEmptyString('type');
