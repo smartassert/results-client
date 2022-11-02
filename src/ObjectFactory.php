@@ -46,7 +46,7 @@ class ObjectFactory
             : new Event($sequenceNumber, $type, $resourceReference, $body, $relatedReferences);
     }
 
-    public function createResourceReference(ArrayInspector $data): ?ResourceReference
+    private function createResourceReference(ArrayInspector $data): ?ResourceReference
     {
         $label = $data->getNonEmptyString('label');
         $reference = $data->getNonEmptyString('reference');
