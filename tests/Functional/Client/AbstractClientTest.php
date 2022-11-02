@@ -14,7 +14,9 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Client;
-use SmartAssert\ResultsClient\ObjectFactory;
+use SmartAssert\ResultsClient\EventFactory;
+use SmartAssert\ResultsClient\JobEventFactory;
+use SmartAssert\ResultsClient\ResourceReferenceFactory;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\CommonNonSuccessResponseDataProviderTrait;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\InvalidJsonResponseExceptionDataProviderTrait;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\NetworkErrorExceptionDataProviderTrait;
@@ -52,7 +54,11 @@ abstract class AbstractClientTest extends TestCase
                 $httpFactory,
                 new HttpClient(['handler' => $handlerStack]),
             ),
-            new ObjectFactory()
+            new JobEventFactory(
+                new EventFactory(
+                    new ResourceReferenceFactory()
+                )
+            )
         );
     }
 
