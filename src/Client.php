@@ -24,7 +24,7 @@ class Client
     public function __construct(
         private readonly string $baseUrl,
         private readonly ServiceClient $serviceClient,
-        private readonly ObjectFactory $objectFactory,
+        private readonly JobEventFactory $jobEventFactory,
     ) {
     }
 
@@ -87,7 +87,7 @@ class Client
 
         $responseDataInspector = new ArrayInspector($response->getData());
 
-        $jobEvent = $this->objectFactory->createJobEvent($responseDataInspector);
+        $jobEvent = $this->jobEventFactory->create($responseDataInspector);
 
         if (null === $jobEvent) {
             throw InvalidModelDataException::fromJsonResponse(JobEvent::class, $response);
@@ -127,7 +127,7 @@ class Client
             if (is_array($value)) {
                 $eventDataInspector = new ArrayInspector($value);
 
-                $jobEvent = $this->objectFactory->createJobEvent($eventDataInspector);
+                $jobEvent = $this->jobEventFactory->create($eventDataInspector);
 
                 if ($jobEvent instanceof JobEvent) {
                     $events[] = $jobEvent;
