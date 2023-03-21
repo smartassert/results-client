@@ -13,6 +13,7 @@ use SmartAssert\ResultsClient\JobEventFactory;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\ResourceReferenceFactory;
 use SmartAssert\ServiceClient\Client as ServiceClient;
+use SmartAssert\ServiceClient\ResponseFactory\ResponseFactory;
 use SmartAssert\UsersClient\Client as UsersClient;
 use SmartAssert\UsersClient\Model\ApiKey;
 use SmartAssert\UsersClient\Model\Token;
@@ -84,6 +85,6 @@ abstract class AbstractIntegrationTest extends TestCase
     {
         $httpFactory = new HttpFactory();
 
-        return new ServiceClient($httpFactory, $httpFactory, new HttpClient());
+        return new ServiceClient($httpFactory, $httpFactory, new HttpClient(), ResponseFactory::createFactory());
     }
 }

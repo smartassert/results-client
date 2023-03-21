@@ -13,11 +13,12 @@ use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
-use SmartAssert\ServiceClient\Exception\InvalidResponseContentException;
 use SmartAssert\ServiceClient\Exception\InvalidResponseDataException;
+use SmartAssert\ServiceClient\Exception\InvalidResponseTypeException;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\Payload\JsonPayload;
 use SmartAssert\ServiceClient\Request;
+use SmartAssert\ServiceClient\Response\JsonResponse;
 
 class Client
 {
@@ -33,20 +34,24 @@ class Client
      * @param non-empty-string $label
      *
      * @throws ClientExceptionInterface
-     * @throws InvalidResponseContentException
      * @throws InvalidResponseDataException
      * @throws NonSuccessResponseException
      * @throws InvalidModelDataException
+     * @throws InvalidResponseTypeException
      */
     public function createJob(string $token, string $label): Job
     {
-        $response = $this->serviceClient->sendRequestForJsonEncodedData(
+        $response = $this->serviceClient->sendRequest(
             (new Request('POST', $this->createUrl('/job/' . $label)))
                 ->withAuthentication(new BearerAuthentication($token))
         );
 
         if (!$response->isSuccessful()) {
             throw new NonSuccessResponseException($response->getHttpResponse());
+        }
+
+        if (!$response instanceof JsonResponse) {
+            throw InvalidResponseTypeException::create($response, JsonResponse::class);
         }
 
         $responseDataInspector = new ArrayInspector($response->getData());
@@ -63,15 +68,15 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
-     * @throws InvalidResponseContentException
      * @throws InvalidResponseDataException
      * @throws NonSuccessResponseException
      * @throws InvalidJobTokenException
      * @throws InvalidModelDataException
+     * @throws InvalidResponseTypeException
      */
     public function addEvent(string $jobToken, Event $event): ?JobEvent
     {
-        $response = $this->serviceClient->sendRequestForJsonEncodedData(
+        $response = $this->serviceClient->sendRequest(
             (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
                 ->withAuthentication(new BearerAuthentication($jobToken))
                 ->withPayload(new JsonPayload($event))
@@ -83,6 +88,10 @@ class Client
             }
 
             throw new NonSuccessResponseException($response->getHttpResponse());
+        }
+
+        if (!$response instanceof JsonResponse) {
+            throw InvalidResponseTypeException::create($response, JsonResponse::class);
         }
 
         $responseDataInspector = new ArrayInspector($response->getData());
@@ -104,19 +113,23 @@ class Client
      * @return JobEvent[]
      *
      * @throws ClientExceptionInterface
-     * @throws InvalidResponseContentException
      * @throws InvalidResponseDataException
      * @throws NonSuccessResponseException
+     * @throws InvalidResponseTypeException
      */
     public function listEvents(string $token, string $jobLabel, string $eventReference): array
     {
-        $response = $this->serviceClient->sendRequestForJsonEncodedData(
+        $response = $this->serviceClient->sendRequest(
             (new Request('GET', $this->createUrl('/event/list/' . $jobLabel . '/' . $eventReference)))
                 ->withAuthentication(new BearerAuthentication($token))
         );
 
         if (!$response->isSuccessful()) {
             throw new NonSuccessResponseException($response->getHttpResponse());
+        }
+
+        if (!$response instanceof JsonResponse) {
+            throw InvalidResponseTypeException::create($response, JsonResponse::class);
         }
 
         $events = [];

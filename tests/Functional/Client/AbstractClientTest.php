@@ -22,6 +22,7 @@ use SmartAssert\ResultsClient\Tests\Functional\DataProvider\InvalidJsonResponseE
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\NetworkErrorExceptionDataProviderTrait;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
+use SmartAssert\ServiceClient\ResponseFactory\ResponseFactory;
 use webignition\HttpHistoryContainer\Container as HttpHistoryContainer;
 
 abstract class AbstractClientTest extends TestCase
@@ -53,6 +54,7 @@ abstract class AbstractClientTest extends TestCase
                 $httpFactory,
                 $httpFactory,
                 new HttpClient(['handler' => $handlerStack]),
+                ResponseFactory::createFactory(),
             ),
             new JobEventFactory(
                 new EventFactory(
