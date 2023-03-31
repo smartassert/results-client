@@ -106,9 +106,10 @@ class Client
     }
 
     /**
-     * @param non-empty-string $token
-     * @param non-empty-string $jobLabel
-     * @param non-empty-string $eventReference
+     * @param non-empty-string      $token
+     * @param non-empty-string      $jobLabel
+     * @param null|non-empty-string $reference
+     * @param null|non-empty-string $type
      *
      * @return JobEvent[]
      *
@@ -117,11 +118,21 @@ class Client
      * @throws NonSuccessResponseException
      * @throws InvalidResponseTypeException
      */
-    public function listEvents(string $token, string $jobLabel, string $eventReference, ?string $type = null): array
+    public function listEvents(string $token, string $jobLabel, ?string $reference, ?string $type): array
     {
-        $url = $this->createUrl('/event/list/' . $jobLabel . '/' . $eventReference);
+        $url = $this->createUrl('/event/list/' . $jobLabel);
+
+        $queryParameters = [];
+        if (is_string($reference)) {
+            $queryParameters['reference'] = $reference;
+        }
+
         if (is_string($type)) {
-            $url .= '/' . $type;
+            $queryParameters['type'] = $type;
+        }
+
+        if ([] !== $queryParameters) {
+            $url .= '?' . http_build_query($queryParameters);
         }
 
         $response = $this->serviceClient->sendRequest(

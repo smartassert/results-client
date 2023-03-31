@@ -18,7 +18,7 @@ class ListEventsTest extends AbstractClientTest
 
         $apiKey = 'api key value';
 
-        $this->client->listEvents($apiKey, 'job label', 'event reference');
+        $this->client->listEvents($apiKey, 'job label', 'event reference', 'event type');
 
         $request = $this->getLastRequest();
         self::assertSame('GET', $request->getMethod());
@@ -28,7 +28,7 @@ class ListEventsTest extends AbstractClientTest
     protected function createClientActionCallable(): callable
     {
         return function () {
-            $this->client->listEvents('api token', 'job label', 'event reference');
+            $this->client->listEvents('api token', 'job label', 'event reference', 'event type');
         };
     }
 }
