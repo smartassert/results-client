@@ -117,11 +117,15 @@ class Client
      * @throws NonSuccessResponseException
      * @throws InvalidResponseTypeException
      */
-    public function listEvents(string $token, string $jobLabel, string $eventReference): array
+    public function listEvents(string $token, string $jobLabel, string $eventReference, ?string $type = null): array
     {
+        $url = $this->createUrl('/event/list/' . $jobLabel . '/' . $eventReference);
+        if (is_string($type)) {
+            $url .= '/' . $type;
+        }
+
         $response = $this->serviceClient->sendRequest(
-            (new Request('GET', $this->createUrl('/event/list/' . $jobLabel . '/' . $eventReference)))
-                ->withAuthentication(new BearerAuthentication($token))
+            (new Request('GET', $url))->withAuthentication(new BearerAuthentication($token))
         );
 
         if (!$response->isSuccessful()) {

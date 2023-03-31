@@ -68,13 +68,14 @@ class ListEventsTest extends AbstractIntegrationTest
         callable $apiTokenCreator,
         callable $jobLabelCreator,
         string $eventReference,
+        ?string $type,
         callable $expectedEventsCreator,
     ): void {
         $apiToken = $apiTokenCreator();
 
         self::assertEquals(
             $expectedEventsCreator(),
-            self::$client->listEvents($apiToken->token, $jobLabelCreator(), $eventReference)
+            self::$client->listEvents($apiToken->token, $jobLabelCreator(), $eventReference, $type)
         );
     }
 
@@ -92,6 +93,7 @@ class ListEventsTest extends AbstractIntegrationTest
                     return self::$user1JobLabel;
                 },
                 'eventReference' => 'event reference',
+                'type' => null,
                 'expectedEventsCreator' => function () {
                     return [];
                 },
@@ -104,6 +106,7 @@ class ListEventsTest extends AbstractIntegrationTest
                     return (string) new Ulid();
                 },
                 'eventReference' => md5('user1test1.yml'),
+                'type' => null,
                 'expectedEventsCreator' => function () {
                     return [];
                 },
@@ -116,6 +119,7 @@ class ListEventsTest extends AbstractIntegrationTest
                     return self::$user1JobLabel;
                 },
                 'eventReference' => md5('user1test3.yml'),
+                'type' => null,
                 'expectedEventsCreator' => function () {
                     return [];
                 },
@@ -128,6 +132,7 @@ class ListEventsTest extends AbstractIntegrationTest
                     return self::$user1JobLabel;
                 },
                 'eventReference' => md5('user1test2.yml'),
+                'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
                         new JobEvent(
@@ -150,6 +155,7 @@ class ListEventsTest extends AbstractIntegrationTest
                     return self::$user2JobLabel;
                 },
                 'eventReference' => md5('user2test1.yml'),
+                'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
                         new JobEvent(
@@ -164,7 +170,7 @@ class ListEventsTest extends AbstractIntegrationTest
                     ];
                 },
             ],
-            'single event, matches reference' => [
+            'two events match reference' => [
                 'apiToken' => function () {
                     return self::$user1ApiToken;
                 },
@@ -172,6 +178,7 @@ class ListEventsTest extends AbstractIntegrationTest
                     return self::$user1JobLabel;
                 },
                 'eventReference' => md5('user1test1.yml'),
+                'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
                         new JobEvent(
@@ -188,6 +195,42 @@ class ListEventsTest extends AbstractIntegrationTest
                             new Event(
                                 2,
                                 'type_2',
+                                new ResourceReference('user1test1.yml', md5('user1test1.yml')),
+                                []
+                            )
+                        ),
+                    ];
+                },
+            ],
+            'single event, matches reference (user 1), excluded by type filter' => [
+                'apiToken' => function () {
+                    return self::$user1ApiToken;
+                },
+                'jobLabelCreator' => function () {
+                    return self::$user1JobLabel;
+                },
+                'eventReference' => md5('user1test2.yml'),
+                'type' => 'type_2',
+                'expectedEventsCreator' => function () {
+                    return [];
+                },
+            ],
+            'two events match reference, one excluded by type filter' => [
+                'apiToken' => function () {
+                    return self::$user1ApiToken;
+                },
+                'jobLabelCreator' => function () {
+                    return self::$user1JobLabel;
+                },
+                'eventReference' => md5('user1test1.yml'),
+                'type' => 'type_1',
+                'expectedEventsCreator' => function () {
+                    return [
+                        new JobEvent(
+                            self::$user1JobLabel,
+                            new Event(
+                                1,
+                                'type_1',
                                 new ResourceReference('user1test1.yml', md5('user1test1.yml')),
                                 []
                             )
