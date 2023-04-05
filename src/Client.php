@@ -7,7 +7,7 @@ namespace SmartAssert\ResultsClient;
 use Psr\Http\Client\ClientExceptionInterface;
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
-use SmartAssert\ResultsClient\Model\Event\Event;
+use SmartAssert\ResultsClient\Model\Event\EventInterface;
 use SmartAssert\ResultsClient\Model\Event\JobEvent;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
@@ -74,12 +74,12 @@ class Client
      * @throws InvalidModelDataException
      * @throws InvalidResponseTypeException
      */
-    public function addEvent(string $jobToken, Event $event): ?JobEvent
+    public function addEvent(string $jobToken, EventInterface $event): ?JobEvent
     {
         $response = $this->serviceClient->sendRequest(
             (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
                 ->withAuthentication(new BearerAuthentication($jobToken))
-                ->withPayload(new JsonPayload($event))
+                ->withPayload(new JsonPayload($event->toArray()))
         );
 
         if (!$response->isSuccessful()) {
