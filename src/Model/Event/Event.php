@@ -5,18 +5,9 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Model\Event;
 
 /**
- * @phpstan-import-type SerializedResourceReference from ResourceReference
- *
- * @phpstan-type SerializedEvent array{
- *     sequence_number: positive-int,
- *     type: non-empty-string,
- *     body: array<mixed>,
- *     related_references?: SerializedResourceReference[],
- *     label: non-empty-string,
- *     reference: non-empty-string
- * }
+ * @phpstan-import-type SerializedEvent from EventInterface
  */
-class Event implements \JsonSerializable
+class Event implements EventInterface
 {
     /**
      * @param positive-int     $sequenceNumber
@@ -35,7 +26,7 @@ class Event implements \JsonSerializable
     /**
      * @return SerializedEvent
      */
-    public function jsonSerialize(): array
+    public function toArray(): array
     {
         $data = array_merge(
             [

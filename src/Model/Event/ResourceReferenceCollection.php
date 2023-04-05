@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Model\Event;
 
-/**
- * @phpstan-import-type SerializedResourceReference from ResourceReference
- */
 class ResourceReferenceCollection
 {
     /**
@@ -18,7 +15,7 @@ class ResourceReferenceCollection
     }
 
     /**
-     * @return SerializedResourceReference[]
+     * @return array<array{label: non-empty-string, reference: non-empty-string}>
      */
     public function toArray(): array
     {
