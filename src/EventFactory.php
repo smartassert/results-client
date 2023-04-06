@@ -6,6 +6,7 @@ namespace SmartAssert\ResultsClient;
 
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Model\Event\Event;
+use SmartAssert\ResultsClient\Model\Event\EventInterface;
 use SmartAssert\ResultsClient\Model\Event\ResourceReference;
 use SmartAssert\ResultsClient\Model\Event\ResourceReferenceCollection;
 
@@ -16,7 +17,7 @@ class EventFactory
     ) {
     }
 
-    public function create(ArrayInspector $data): ?Event
+    public function create(ArrayInspector $data): ?EventInterface
     {
         $sequenceNumber = $data->getPositiveInteger('sequence_number');
         $type = $data->getNonEmptyString('type');
