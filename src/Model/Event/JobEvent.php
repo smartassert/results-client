@@ -8,7 +8,7 @@ class JobEvent
 {
     public function __construct(
         public readonly string $jobLabel,
-        public readonly Event $event,
+        public readonly EventInterface $event,
     ) {
     }
 }
