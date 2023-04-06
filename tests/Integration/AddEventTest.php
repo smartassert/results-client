@@ -54,6 +54,8 @@ class AddEventTest extends AbstractIntegrationTest
                     []
                 ),
                 'expectedJobEventCreator' => function (string $jobLabel): JobEvent {
+                    \assert('' !== $jobLabel);
+
                     return new JobEvent(
                         $jobLabel,
                         new Event(
@@ -76,6 +78,8 @@ class AddEventTest extends AbstractIntegrationTest
                     ]
                 ),
                 'expectedJobEventCreator' => function (string $jobLabel): JobEvent {
+                    \assert('' !== $jobLabel);
+
                     return new JobEvent(
                         $jobLabel,
                         new Event(
@@ -101,6 +105,8 @@ class AddEventTest extends AbstractIntegrationTest
                     ])
                 ),
                 'expectedJobEventCreator' => function (string $jobLabel): JobEvent {
+                    \assert('' !== $jobLabel);
+
                     return new JobEvent(
                         $jobLabel,
                         new Event(
@@ -129,6 +135,8 @@ class AddEventTest extends AbstractIntegrationTest
                     ])
                 ),
                 'expectedJobEventCreator' => function (string $jobLabel): JobEvent {
+                    \assert('' !== $jobLabel);
+
                     return new JobEvent(
                         $jobLabel,
                         new Event(

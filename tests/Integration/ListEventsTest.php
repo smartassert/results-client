@@ -14,6 +14,10 @@ use Symfony\Component\Uid\Ulid;
 class ListEventsTest extends AbstractIntegrationTest
 {
     private static Token $user2ApiToken;
+
+    /**
+     * @var non-empty-string
+     */
     private static string $user2JobLabel;
     private static Job $user2Job;
 
