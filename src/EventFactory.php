@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient;
 
 use SmartAssert\ArrayInspector\ArrayInspector;
-use SmartAssert\ResultsClient\Model\Event\Event;
-use SmartAssert\ResultsClient\Model\Event\EventInterface;
-use SmartAssert\ResultsClient\Model\Event\ResourceReference;
-use SmartAssert\ResultsClient\Model\Event\ResourceReferenceCollection;
+use SmartAssert\ResultsClient\Model\Event;
+use SmartAssert\ResultsClient\Model\EventInterface;
+use SmartAssert\ResultsClient\Model\ResourceReference;
+use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 
 class EventFactory
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Model\Event;
+namespace SmartAssert\ResultsClient\Model;
 
 /**
  * @phpstan-import-type SerializedEvent from EventInterface

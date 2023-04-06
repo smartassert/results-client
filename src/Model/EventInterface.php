@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Model\Event;
+namespace SmartAssert\ResultsClient\Model;
+
+use SmartAssert\ResultsClient\Model\Event\SerializedEvent;
 
 /**
  * @phpstan-type SerializedEvent array{

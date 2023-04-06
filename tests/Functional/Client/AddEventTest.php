@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 
 use GuzzleHttp\Psr7\Response;
-use SmartAssert\ResultsClient\Model\Event\Event;
-use SmartAssert\ResultsClient\Model\Event\ResourceReference;
+use SmartAssert\ResultsClient\Model\Event;
+use SmartAssert\ResultsClient\Model\ResourceReference;
 
 class AddEventTest extends AbstractClientModelCreationTest
 {

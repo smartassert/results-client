@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Tests\Integration;
 
-use SmartAssert\ResultsClient\Model\Event\Event;
-use SmartAssert\ResultsClient\Model\Event\EventInterface;
-use SmartAssert\ResultsClient\Model\Event\ResourceReference;
+use SmartAssert\ResultsClient\Model\Event;
+use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
+use SmartAssert\ResultsClient\Model\ResourceReference;
 use SmartAssert\UsersClient\Model\Token;
 use Symfony\Component\Uid\Ulid;
 
