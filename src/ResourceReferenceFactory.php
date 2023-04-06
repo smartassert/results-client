@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient;
 
 use SmartAssert\ArrayInspector\ArrayInspector;
-use SmartAssert\ResultsClient\Model\Event\ResourceReference;
+use SmartAssert\ResultsClient\Model\ResourceReference;
 
 class ResourceReferenceFactory
 {

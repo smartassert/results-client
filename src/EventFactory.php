@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient;
 
 use SmartAssert\ArrayInspector\ArrayInspector;
-use SmartAssert\ResultsClient\Model\Event\Event;
-use SmartAssert\ResultsClient\Model\Event\EventInterface;
-use SmartAssert\ResultsClient\Model\Event\ResourceReference;
-use SmartAssert\ResultsClient\Model\Event\ResourceReferenceCollection;
+use SmartAssert\ResultsClient\Model\Event;
+use SmartAssert\ResultsClient\Model\EventInterface;
+use SmartAssert\ResultsClient\Model\ResourceReference;
+use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 
 class EventFactory
 {
@@ -37,9 +37,18 @@ class EventFactory
         }
 
         $relatedReferences = [] === $references ? null : new ResourceReferenceCollection($references);
+        $job = $data->getNonEmptyString('job');
 
-        return null === $sequenceNumber || null === $type || null === $resourceReference
-            ? null
-            : new Event($sequenceNumber, $type, $resourceReference, $body, $relatedReferences);
+        if (null === $sequenceNumber || null === $type || null === $resourceReference) {
+            return null;
+        }
+
+        $event = new Event($sequenceNumber, $type, $resourceReference, $body, $relatedReferences);
+
+        if (is_string($job) && '' !== $job) {
+            $event = $event->withJob($job);
+        }
+
+        return $event;
     }
 }

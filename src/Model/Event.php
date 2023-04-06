@@ -2,13 +2,18 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Model\Event;
+namespace SmartAssert\ResultsClient\Model;
 
 /**
  * @phpstan-import-type SerializedEvent from EventInterface
  */
 class Event implements EventInterface
 {
+    /**
+     * @var null|non-empty-string
+     */
+    private ?string $job;
+
     /**
      * @param positive-int     $sequenceNumber
      * @param non-empty-string $type
@@ -21,6 +26,24 @@ class Event implements EventInterface
         public readonly array $body,
         public readonly ?ResourceReferenceCollection $relatedReferences = null,
     ) {
+    }
+
+    /**
+     * @param non-empty-string $job
+     */
+    public function withJob(string $job): EventInterface
+    {
+        $event = new Event(
+            $this->sequenceNumber,
+            $this->type,
+            $this->resourceReference,
+            $this->body,
+            $this->relatedReferences,
+        );
+
+        $event->job = $job;
+
+        return $event;
     }
 
     /**
@@ -39,6 +62,10 @@ class Event implements EventInterface
 
         if ($this->relatedReferences instanceof ResourceReferenceCollection) {
             $data['related_references'] = $this->relatedReferences->toArray();
+        }
+
+        if (isset($this->job)) {
+            $data['job'] = $this->job;
         }
 
         return $data;
