@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Tests\Integration;
 
 use SmartAssert\ResultsClient\Model\Event\Event;
-use SmartAssert\ResultsClient\Model\Event\JobEvent;
+use SmartAssert\ResultsClient\Model\Event\EventInterface;
 use SmartAssert\ResultsClient\Model\Event\ResourceReference;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\UsersClient\Model\Token;
@@ -65,7 +65,7 @@ class ListEventsTest extends AbstractIntegrationTest
      * @param callable(): non-empty-string $jobLabelCreator
      * @param ?non-empty-string            $eventReference
      * @param ?non-empty-string            $type
-     * @param callable(): Event[]          $expectedEventsCreator
+     * @param callable(): EventInterface[] $expectedEventsCreator
      *
      * @dataProvider listDataProvider
      */
@@ -140,16 +140,13 @@ class ListEventsTest extends AbstractIntegrationTest
                 'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
-                        new JobEvent(
-                            self::$user1JobLabel,
-                            (new Event(
-                                3,
-                                'type_1',
-                                new ResourceReference('user1test2.yml', md5('user1test2.yml')),
-                                [],
-                                null,
-                            ))->withJob(self::$user1JobLabel)
-                        ),
+                        (new Event(
+                            3,
+                            'type_1',
+                            new ResourceReference('user1test2.yml', md5('user1test2.yml')),
+                            [],
+                            null,
+                        ))->withJob(self::$user1JobLabel),
                     ];
                 },
             ],
@@ -164,16 +161,13 @@ class ListEventsTest extends AbstractIntegrationTest
                 'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
-                        new JobEvent(
-                            self::$user2JobLabel,
-                            (new Event(
-                                1,
-                                'type_1',
-                                new ResourceReference('user2test1.yml', md5('user2test1.yml')),
-                                [],
-                                null,
-                            ))->withJob(self::$user2JobLabel)
-                        ),
+                        (new Event(
+                            1,
+                            'type_1',
+                            new ResourceReference('user2test1.yml', md5('user2test1.yml')),
+                            [],
+                            null,
+                        ))->withJob(self::$user2JobLabel),
                     ];
                 },
             ],
@@ -188,26 +182,20 @@ class ListEventsTest extends AbstractIntegrationTest
                 'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
-                        new JobEvent(
-                            self::$user1JobLabel,
-                            (new Event(
-                                1,
-                                'type_1',
-                                new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                [],
-                                null,
-                            ))->withJob(self::$user1JobLabel)
-                        ),
-                        new JobEvent(
-                            self::$user1JobLabel,
-                            (new Event(
-                                2,
-                                'type_2',
-                                new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                [],
-                                null,
-                            ))->withJob(self::$user1JobLabel)
-                        ),
+                        (new Event(
+                            1,
+                            'type_1',
+                            new ResourceReference('user1test1.yml', md5('user1test1.yml')),
+                            [],
+                            null,
+                        ))->withJob(self::$user1JobLabel),
+                        (new Event(
+                            2,
+                            'type_2',
+                            new ResourceReference('user1test1.yml', md5('user1test1.yml')),
+                            [],
+                            null,
+                        ))->withJob(self::$user1JobLabel),
                     ];
                 },
             ],
@@ -235,16 +223,13 @@ class ListEventsTest extends AbstractIntegrationTest
                 'type' => 'type_1',
                 'expectedEventsCreator' => function () {
                     return [
-                        new JobEvent(
-                            self::$user1JobLabel,
-                            (new Event(
-                                1,
-                                'type_1',
-                                new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                [],
-                                null,
-                            ))->withJob(self::$user1JobLabel)
-                        ),
+                        (new Event(
+                            1,
+                            'type_1',
+                            new ResourceReference('user1test1.yml', md5('user1test1.yml')),
+                            [],
+                            null,
+                        ))->withJob(self::$user1JobLabel),
                     ];
                 },
             ],
@@ -259,36 +244,27 @@ class ListEventsTest extends AbstractIntegrationTest
                 'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
-                        new JobEvent(
-                            self::$user1JobLabel,
-                            (new Event(
-                                1,
-                                'type_1',
-                                new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                [],
-                                null,
-                            ))->withJob(self::$user1JobLabel)
-                        ),
-                        new JobEvent(
-                            self::$user1JobLabel,
-                            (new Event(
-                                2,
-                                'type_2',
-                                new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                [],
-                                null,
-                            ))->withJob(self::$user1JobLabel)
-                        ),
-                        new JobEvent(
-                            self::$user1JobLabel,
-                            (new Event(
-                                3,
-                                'type_1',
-                                new ResourceReference('user1test2.yml', md5('user1test2.yml')),
-                                [],
-                                null,
-                            ))->withJob(self::$user1JobLabel)
-                        ),
+                        (new Event(
+                            1,
+                            'type_1',
+                            new ResourceReference('user1test1.yml', md5('user1test1.yml')),
+                            [],
+                            null,
+                        ))->withJob(self::$user1JobLabel),
+                        (new Event(
+                            2,
+                            'type_2',
+                            new ResourceReference('user1test1.yml', md5('user1test1.yml')),
+                            [],
+                            null,
+                        ))->withJob(self::$user1JobLabel),
+                        (new Event(
+                            3,
+                            'type_1',
+                            new ResourceReference('user1test2.yml', md5('user1test2.yml')),
+                            [],
+                            null,
+                        ))->withJob(self::$user1JobLabel),
                     ];
                 },
             ],

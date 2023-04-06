@@ -6,7 +6,6 @@ namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 
 use GuzzleHttp\Psr7\Response;
 use SmartAssert\ResultsClient\Model\Event\Event;
-use SmartAssert\ResultsClient\Model\Event\JobEvent;
 use SmartAssert\ResultsClient\Model\Event\ResourceReference;
 
 class AddEventTest extends AbstractClientModelCreationTest
@@ -50,6 +49,6 @@ class AddEventTest extends AbstractClientModelCreationTest
 
     protected function getExpectedModelClass(): string
     {
-        return JobEvent::class;
+        return Event::class;
     }
 }

@@ -7,8 +7,8 @@ namespace SmartAssert\ResultsClient;
 use Psr\Http\Client\ClientExceptionInterface;
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
+use SmartAssert\ResultsClient\Model\Event\Event;
 use SmartAssert\ResultsClient\Model\Event\EventInterface;
-use SmartAssert\ResultsClient\Model\Event\JobEvent;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
@@ -25,7 +25,7 @@ class Client
     public function __construct(
         private readonly string $baseUrl,
         private readonly ServiceClient $serviceClient,
-        private readonly JobEventFactory $jobEventFactory,
+        private readonly EventFactory $eventFactory,
     ) {
     }
 
@@ -74,7 +74,7 @@ class Client
      * @throws InvalidModelDataException
      * @throws InvalidResponseTypeException
      */
-    public function addEvent(string $jobToken, EventInterface $event): ?JobEvent
+    public function addEvent(string $jobToken, EventInterface $event): ?EventInterface
     {
         $response = $this->serviceClient->sendRequest(
             (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
@@ -96,13 +96,13 @@ class Client
 
         $responseDataInspector = new ArrayInspector($response->getData());
 
-        $jobEvent = $this->jobEventFactory->create($responseDataInspector);
+        $createdEvent = $this->eventFactory->create($responseDataInspector);
 
-        if (null === $jobEvent) {
-            throw InvalidModelDataException::fromJsonResponse(JobEvent::class, $response);
+        if (null === $createdEvent) {
+            throw InvalidModelDataException::fromJsonResponse(Event::class, $response);
         }
 
-        return $jobEvent;
+        return $createdEvent;
     }
 
     /**
@@ -111,7 +111,7 @@ class Client
      * @param null|non-empty-string $reference
      * @param null|non-empty-string $type
      *
-     * @return JobEvent[]
+     * @return EventInterface[]
      *
      * @throws ClientExceptionInterface
      * @throws InvalidResponseDataException
@@ -153,12 +153,9 @@ class Client
 
         $responseDataInspector->each(function (int|string $key, mixed $value) use (&$events) {
             if (is_array($value)) {
-                $eventDataInspector = new ArrayInspector($value);
-
-                $jobEvent = $this->jobEventFactory->create($eventDataInspector);
-
-                if ($jobEvent instanceof JobEvent) {
-                    $events[] = $jobEvent;
+                $event = $this->eventFactory->create(new ArrayInspector($value));
+                if ($event instanceof EventInterface) {
+                    $events[] = $event;
                 }
             }
         });

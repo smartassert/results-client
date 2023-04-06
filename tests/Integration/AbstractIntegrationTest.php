@@ -9,7 +9,6 @@ use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\EventFactory;
-use SmartAssert\ResultsClient\JobEventFactory;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\ResourceReferenceFactory;
 use SmartAssert\ServiceClient\Client as ServiceClient;
@@ -41,10 +40,8 @@ abstract class AbstractIntegrationTest extends TestCase
         self::$client = new Client(
             'http://localhost:9081',
             self::createServiceClient(),
-            new JobEventFactory(
-                new EventFactory(
-                    new ResourceReferenceFactory()
-                )
+            new EventFactory(
+                new ResourceReferenceFactory()
             ),
         );
         self::$user1ApiToken = self::createUserApiToken(self::USER1_EMAIL, self::USER1_PASSWORD);
