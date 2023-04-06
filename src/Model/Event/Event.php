@@ -64,7 +64,7 @@ class Event implements EventInterface
             $data['related_references'] = $this->relatedReferences->toArray();
         }
 
-        if (isset($this->job) && is_string($this->job)) {
+        if (isset($this->job)) {
             $data['job'] = $this->job;
         }
 
