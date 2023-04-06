@@ -62,7 +62,9 @@ class AddEventTest extends AbstractIntegrationTest
                             1,
                             'event_type',
                             new ResourceReference('event_label_1', 'event_reference_1'),
-                            []
+                            [],
+                            null,
+                            $jobLabel,
                         )
                     );
                 },
@@ -89,7 +91,9 @@ class AddEventTest extends AbstractIntegrationTest
                             [
                                 'key1' => 'value1',
                                 'key2' => 'value2',
-                            ]
+                            ],
+                            null,
+                            $jobLabel,
                         )
                     );
                 },
@@ -116,7 +120,8 @@ class AddEventTest extends AbstractIntegrationTest
                             [],
                             new ResourceReferenceCollection([
                                 new ResourceReference('event_label_1', 'event_reference_1'),
-                            ])
+                            ]),
+                            $jobLabel,
                         )
                     );
                 },
@@ -149,7 +154,8 @@ class AddEventTest extends AbstractIntegrationTest
                             ],
                             new ResourceReferenceCollection([
                                 new ResourceReference('event_label_1', 'event_reference_1'),
-                            ])
+                            ]),
+                            $jobLabel
                         )
                     );
                 },

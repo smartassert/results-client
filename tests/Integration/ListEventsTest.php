@@ -146,7 +146,9 @@ class ListEventsTest extends AbstractIntegrationTest
                                 3,
                                 'type_1',
                                 new ResourceReference('user1test2.yml', md5('user1test2.yml')),
-                                []
+                                [],
+                                null,
+                                self::$user1JobLabel,
                             )
                         ),
                     ];
@@ -169,7 +171,9 @@ class ListEventsTest extends AbstractIntegrationTest
                                 1,
                                 'type_1',
                                 new ResourceReference('user2test1.yml', md5('user2test1.yml')),
-                                []
+                                [],
+                                null,
+                                self::$user2JobLabel,
                             )
                         ),
                     ];
@@ -192,7 +196,9 @@ class ListEventsTest extends AbstractIntegrationTest
                                 1,
                                 'type_1',
                                 new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                []
+                                [],
+                                null,
+                                self::$user1JobLabel,
                             )
                         ),
                         new JobEvent(
@@ -201,7 +207,9 @@ class ListEventsTest extends AbstractIntegrationTest
                                 2,
                                 'type_2',
                                 new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                []
+                                [],
+                                null,
+                                self::$user1JobLabel,
                             )
                         ),
                     ];
@@ -237,7 +245,9 @@ class ListEventsTest extends AbstractIntegrationTest
                                 1,
                                 'type_1',
                                 new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                []
+                                [],
+                                null,
+                                self::$user1JobLabel,
                             )
                         ),
                     ];
@@ -260,7 +270,9 @@ class ListEventsTest extends AbstractIntegrationTest
                                 1,
                                 'type_1',
                                 new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                []
+                                [],
+                                null,
+                                self::$user1JobLabel,
                             )
                         ),
                         new JobEvent(
@@ -269,7 +281,9 @@ class ListEventsTest extends AbstractIntegrationTest
                                 2,
                                 'type_2',
                                 new ResourceReference('user1test1.yml', md5('user1test1.yml')),
-                                []
+                                [],
+                                null,
+                                self::$user1JobLabel,
                             )
                         ),
                         new JobEvent(
@@ -278,7 +292,9 @@ class ListEventsTest extends AbstractIntegrationTest
                                 3,
                                 'type_1',
                                 new ResourceReference('user1test2.yml', md5('user1test2.yml')),
-                                []
+                                [],
+                                null,
+                                self::$user1JobLabel,
                             )
                         ),
                     ];
