@@ -6,6 +6,7 @@ namespace SmartAssert\ResultsClient\Model\Event;
 
 /**
  * @phpstan-type SerializedEvent array{
+ *     job?: non-empty-string,
  *     sequence_number: positive-int,
  *     type: non-empty-string,
  *     body: array<mixed>,
