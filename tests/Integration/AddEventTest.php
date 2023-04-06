@@ -58,14 +58,13 @@ class AddEventTest extends AbstractIntegrationTest
 
                     return new JobEvent(
                         $jobLabel,
-                        new Event(
+                        (new Event(
                             1,
                             'event_type',
                             new ResourceReference('event_label_1', 'event_reference_1'),
                             [],
                             null,
-                            $jobLabel,
-                        )
+                        ))->withJob($jobLabel)
                     );
                 },
             ],
@@ -84,7 +83,7 @@ class AddEventTest extends AbstractIntegrationTest
 
                     return new JobEvent(
                         $jobLabel,
-                        new Event(
+                        (new Event(
                             2,
                             'event_type',
                             new ResourceReference('event_label_2', 'event_reference_2'),
@@ -93,8 +92,7 @@ class AddEventTest extends AbstractIntegrationTest
                                 'key2' => 'value2',
                             ],
                             null,
-                            $jobLabel,
-                        )
+                        ))->withJob($jobLabel)
                     );
                 },
             ],
@@ -113,7 +111,7 @@ class AddEventTest extends AbstractIntegrationTest
 
                     return new JobEvent(
                         $jobLabel,
-                        new Event(
+                        (new Event(
                             3,
                             'event_type',
                             new ResourceReference('event_label_3', 'event_reference_3'),
@@ -121,8 +119,7 @@ class AddEventTest extends AbstractIntegrationTest
                             new ResourceReferenceCollection([
                                 new ResourceReference('event_label_1', 'event_reference_1'),
                             ]),
-                            $jobLabel,
-                        )
+                        ))->withJob($jobLabel)
                     );
                 },
             ],
@@ -144,7 +141,7 @@ class AddEventTest extends AbstractIntegrationTest
 
                     return new JobEvent(
                         $jobLabel,
-                        new Event(
+                        (new Event(
                             4,
                             'event_type',
                             new ResourceReference('event_label_4', 'event_reference_4'),
@@ -155,8 +152,7 @@ class AddEventTest extends AbstractIntegrationTest
                             new ResourceReferenceCollection([
                                 new ResourceReference('event_label_1', 'event_reference_1'),
                             ]),
-                            $jobLabel
-                        )
+                        ))->withJob($jobLabel)
                     );
                 },
             ],
