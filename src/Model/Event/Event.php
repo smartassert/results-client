@@ -10,9 +10,10 @@ namespace SmartAssert\ResultsClient\Model\Event;
 class Event implements EventInterface
 {
     /**
-     * @param positive-int     $sequenceNumber
-     * @param non-empty-string $type
-     * @param array<mixed>     $body
+     * @param positive-int          $sequenceNumber
+     * @param non-empty-string      $type
+     * @param array<mixed>          $body
+     * @param null|non-empty-string $job
      */
     public function __construct(
         public readonly int $sequenceNumber,
@@ -20,6 +21,7 @@ class Event implements EventInterface
         public readonly ResourceReference $resourceReference,
         public readonly array $body,
         public readonly ?ResourceReferenceCollection $relatedReferences = null,
+        public readonly ?string $job = null,
     ) {
     }
 
@@ -39,6 +41,10 @@ class Event implements EventInterface
 
         if ($this->relatedReferences instanceof ResourceReferenceCollection) {
             $data['related_references'] = $this->relatedReferences->toArray();
+        }
+
+        if (is_string($this->job)) {
+            $data['job'] = $this->job;
         }
 
         return $data;
