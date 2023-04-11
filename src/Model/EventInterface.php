@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Model;
 
-use SmartAssert\ResultsClient\Model\Event\SerializedEvent;
-
 /**
  * @phpstan-type SerializedEvent array{
  *     job?: non-empty-string,
@@ -23,4 +21,9 @@ interface EventInterface
      * @return SerializedEvent
      */
     public function toArray(): array;
+
+    /**
+     * @param non-empty-string $job
+     */
+    public function withJob(string $job): EventInterface;
 }
