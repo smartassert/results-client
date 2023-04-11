@@ -10,9 +10,9 @@ namespace SmartAssert\ResultsClient\Model;
 class Event implements EventInterface
 {
     /**
-     * @var null|non-empty-string
+     * @var non-empty-string
      */
-    private ?string $job;
+    private string $job;
 
     /**
      * @param positive-int     $sequenceNumber
