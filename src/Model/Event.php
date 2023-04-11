@@ -14,6 +14,8 @@ class Event implements EventInterface
      */
     private string $job;
 
+    private ResourceReferenceCollection $relatedReferences;
+
     /**
      * @param positive-int     $sequenceNumber
      * @param non-empty-string $type
@@ -24,7 +26,6 @@ class Event implements EventInterface
         public readonly string $type,
         public readonly ResourceReference $resourceReference,
         public readonly array $body,
-        public readonly ?ResourceReferenceCollection $relatedReferences = null,
     ) {
     }
 
@@ -33,28 +34,20 @@ class Event implements EventInterface
      */
     public function withJob(string $job): EventInterface
     {
-        $event = new Event(
-            $this->sequenceNumber,
-            $this->type,
-            $this->resourceReference,
-            $this->body,
-            $this->relatedReferences,
-        );
-
+        $event = new Event($this->sequenceNumber, $this->type, $this->resourceReference, $this->body);
         $event->job = $job;
+
+        if (isset($this->relatedReferences)) {
+            $event->relatedReferences = $this->relatedReferences;
+        }
 
         return $event;
     }
 
     public function withRelatedReferences(ResourceReferenceCollection $relatedReferences): EventInterface
     {
-        $event = new Event(
-            $this->sequenceNumber,
-            $this->type,
-            $this->resourceReference,
-            $this->body,
-            $relatedReferences,
-        );
+        $event = new Event($this->sequenceNumber, $this->type, $this->resourceReference, $this->body);
+        $event->relatedReferences = $relatedReferences;
 
         if (isset($this->job)) {
             $event->job = $this->job;
@@ -77,7 +70,7 @@ class Event implements EventInterface
             $this->resourceReference->toArray(),
         );
 
-        if ($this->relatedReferences instanceof ResourceReferenceCollection) {
+        if (isset($this->relatedReferences)) {
             $data['related_references'] = $this->relatedReferences->toArray();
         }
 

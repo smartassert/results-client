@@ -61,7 +61,6 @@ class AddEventTest extends AbstractIntegrationTest
                         'event_type',
                         new ResourceReference('event_label_1', 'event_reference_1'),
                         [],
-                        null,
                     ))->withJob($jobLabel);
                 },
             ],
@@ -86,7 +85,6 @@ class AddEventTest extends AbstractIntegrationTest
                             'key1' => 'value1',
                             'key2' => 'value2',
                         ],
-                        null,
                     ))->withJob($jobLabel);
                 },
             ],
