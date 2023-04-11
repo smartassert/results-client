@@ -37,7 +37,6 @@ class EventFactory
         }
 
         $relatedReferences = [] === $references ? null : new ResourceReferenceCollection($references);
-        $job = $data->getNonEmptyString('job');
 
         if (null === $sequenceNumber || null === $type || null === $resourceReference) {
             return null;
@@ -45,7 +44,8 @@ class EventFactory
 
         $event = new Event($sequenceNumber, $type, $resourceReference, $body, $relatedReferences);
 
-        if (is_string($job) && '' !== $job) {
+        $job = $data->getNonEmptyString('job');
+        if (null !== $job) {
             $event = $event->withJob($job);
         }
 
