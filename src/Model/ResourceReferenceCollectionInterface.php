@@ -13,4 +13,9 @@ interface ResourceReferenceCollectionInterface
      * @return SerializedResourceReference[]
      */
     public function toArray(): array;
+
+    /**
+     * @return ResourceReferenceInterface[]
+     */
+    public function getReferences(): array;
 }

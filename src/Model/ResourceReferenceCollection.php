@@ -10,7 +10,7 @@ class ResourceReferenceCollection implements ResourceReferenceCollectionInterfac
      * @param ResourceReferenceInterface[] $resourceReferences
      */
     public function __construct(
-        public readonly array $resourceReferences = [],
+        private readonly array $resourceReferences = [],
     ) {
     }
 
@@ -23,5 +23,10 @@ class ResourceReferenceCollection implements ResourceReferenceCollectionInterfac
         }
 
         return $data;
+    }
+
+    public function getReferences(): array
+    {
+        return $this->resourceReferences;
     }
 }
