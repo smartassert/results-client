@@ -91,11 +91,12 @@ class AddEventTest extends AbstractIntegrationTest
                 },
             ],
             'with single related reference, empty body' => [
-                'event' => new Event(
+                'event' => (new Event(
                     3,
                     'event_type',
                     new ResourceReference('event_label_3', 'event_reference_3'),
                     [],
+                ))->withRelatedReferences(
                     new ResourceReferenceCollection([
                         new ResourceReference('event_label_1', 'event_reference_1'),
                     ])
@@ -108,14 +109,18 @@ class AddEventTest extends AbstractIntegrationTest
                         'event_type',
                         new ResourceReference('event_label_3', 'event_reference_3'),
                         [],
-                        new ResourceReferenceCollection([
-                            new ResourceReference('event_label_1', 'event_reference_1'),
-                        ]),
-                    ))->withJob($jobLabel);
+                    ))
+                        ->withJob($jobLabel)
+                        ->withRelatedReferences(
+                            new ResourceReferenceCollection([
+                                new ResourceReference('event_label_1', 'event_reference_1'),
+                            ])
+                        )
+                    ;
                 },
             ],
             'with multiple related references, non-empty body' => [
-                'event' => new Event(
+                'event' => (new Event(
                     4,
                     'event_type',
                     new ResourceReference('event_label_4', 'event_reference_4'),
@@ -123,10 +128,9 @@ class AddEventTest extends AbstractIntegrationTest
                         'key3' => 'value3',
                         'key4' => 'value4',
                     ],
-                    new ResourceReferenceCollection([
-                        new ResourceReference('event_label_1', 'event_reference_1'),
-                    ])
-                ),
+                ))->withRelatedReferences(new ResourceReferenceCollection([
+                    new ResourceReference('event_label_1', 'event_reference_1'),
+                ])),
                 'expectedEventCreator' => function (string $jobLabel): EventInterface {
                     \assert('' !== $jobLabel);
 
@@ -138,10 +142,14 @@ class AddEventTest extends AbstractIntegrationTest
                             'key3' => 'value3',
                             'key4' => 'value4',
                         ],
-                        new ResourceReferenceCollection([
-                            new ResourceReference('event_label_1', 'event_reference_1'),
-                        ]),
-                    ))->withJob($jobLabel);
+                    ))
+                        ->withJob($jobLabel)
+                        ->withRelatedReferences(
+                            new ResourceReferenceCollection([
+                                new ResourceReference('event_label_1', 'event_reference_1'),
+                            ])
+                        )
+                    ;
                 },
             ],
         ];
