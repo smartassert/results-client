@@ -36,13 +36,15 @@ class EventFactory
             }
         }
 
-        $relatedReferences = [] === $references ? null : new ResourceReferenceCollection($references);
-
         if (null === $sequenceNumber || null === $type || null === $resourceReference) {
             return null;
         }
 
-        $event = new Event($sequenceNumber, $type, $resourceReference, $body, $relatedReferences);
+        $event = new Event($sequenceNumber, $type, $resourceReference, $body);
+
+        if ([] !== $references) {
+            $event = $event->withRelatedReferences(new ResourceReferenceCollection($references));
+        }
 
         $job = $data->getNonEmptyString('job');
         if (null !== $job) {
