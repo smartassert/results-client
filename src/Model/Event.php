@@ -46,6 +46,23 @@ class Event implements EventInterface
         return $event;
     }
 
+    public function withRelatedReferences(ResourceReferenceCollection $relatedReferences): EventInterface
+    {
+        $event = new Event(
+            $this->sequenceNumber,
+            $this->type,
+            $this->resourceReference,
+            $this->body,
+            $relatedReferences,
+        );
+
+        if (isset($this->job)) {
+            $event->job = $this->job;
+        }
+
+        return $event;
+    }
+
     /**
      * @return SerializedEvent
      */

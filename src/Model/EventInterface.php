@@ -26,4 +26,6 @@ interface EventInterface
      * @param non-empty-string $job
      */
     public function withJob(string $job): EventInterface;
+
+    public function withRelatedReferences(ResourceReferenceCollection $relatedReferences): EventInterface;
 }
