@@ -7,8 +7,8 @@ namespace SmartAssert\ResultsClient;
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
-use SmartAssert\ResultsClient\Model\ResourceReference;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
+use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
 class EventFactory
 {
@@ -30,7 +30,7 @@ class EventFactory
             if (is_array($relatedReferenceData)) {
                 $reference = $this->resourceReferenceFactory->create(new ArrayInspector($relatedReferenceData));
 
-                if ($reference instanceof ResourceReference) {
+                if ($reference instanceof ResourceReferenceInterface) {
                     $references[] = $reference;
                 }
             }

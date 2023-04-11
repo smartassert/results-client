@@ -24,7 +24,7 @@ class Event implements EventInterface
     public function __construct(
         public readonly int $sequenceNumber,
         public readonly string $type,
-        public readonly ResourceReference $resourceReference,
+        public readonly ResourceReferenceInterface $resourceReference,
         public readonly array $body,
     ) {
     }
