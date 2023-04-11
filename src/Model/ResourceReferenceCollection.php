@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Model;
 
-class ResourceReferenceCollection
+class ResourceReferenceCollection implements ResourceReferenceCollectionInterface
 {
     /**
-     * @param ResourceReference[] $resourceReferences
+     * @param ResourceReferenceInterface[] $resourceReferences
      */
     public function __construct(
         public readonly array $resourceReferences = [],
     ) {
     }
 
-    /**
-     * @return array<array{label: non-empty-string, reference: non-empty-string}>
-     */
     public function toArray(): array
     {
         $data = [];

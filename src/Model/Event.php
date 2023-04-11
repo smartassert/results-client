@@ -14,7 +14,7 @@ class Event implements EventInterface
      */
     private string $job;
 
-    private ResourceReferenceCollection $relatedReferences;
+    private ResourceReferenceCollectionInterface $relatedReferences;
 
     /**
      * @param positive-int     $sequenceNumber
@@ -44,7 +44,7 @@ class Event implements EventInterface
         return $event;
     }
 
-    public function withRelatedReferences(ResourceReferenceCollection $relatedReferences): EventInterface
+    public function withRelatedReferences(ResourceReferenceCollectionInterface $relatedReferences): EventInterface
     {
         $event = new Event($this->sequenceNumber, $this->type, $this->resourceReference, $this->body);
         $event->relatedReferences = $relatedReferences;
@@ -56,9 +56,6 @@ class Event implements EventInterface
         return $event;
     }
 
-    /**
-     * @return SerializedEvent
-     */
     public function toArray(): array
     {
         $data = array_merge(

@@ -27,5 +27,5 @@ interface EventInterface
      */
     public function withJob(string $job): EventInterface;
 
-    public function withRelatedReferences(ResourceReferenceCollection $relatedReferences): EventInterface;
+    public function withRelatedReferences(ResourceReferenceCollectionInterface $relatedReferences): EventInterface;
 }

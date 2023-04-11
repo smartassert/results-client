@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Model;
 
-class ResourceReference
+class ResourceReference implements ResourceReferenceInterface
 {
     /**
      * @param non-empty-string $label
@@ -16,9 +16,6 @@ class ResourceReference
     ) {
     }
 
-    /**
-     * @return array{label: non-empty-string, reference: non-empty-string}
-     */
     public function toArray(): array
     {
         return [
