@@ -74,7 +74,7 @@ class Client
      * @throws InvalidModelDataException
      * @throws InvalidResponseTypeException
      */
-    public function addEvent(string $jobToken, EventInterface $event): ?EventInterface
+    public function addEvent(string $jobToken, EventInterface $event): EventInterface
     {
         $response = $this->serviceClient->sendRequest(
             (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
