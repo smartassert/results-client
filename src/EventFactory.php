@@ -7,6 +7,7 @@ namespace SmartAssert\ResultsClient;
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
+use SmartAssert\ResultsClient\Model\JobEventInterface;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
@@ -47,7 +48,7 @@ class EventFactory
         }
 
         $job = $data->getNonEmptyString('job');
-        if (null !== $job) {
+        if (null !== $job && $event instanceof JobEventInterface) {
             $event = $event->withJob($job);
         }
 
