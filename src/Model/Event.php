@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Model;
 
 /**
- * @phpstan-import-type SerializedEvent from EventInterface
+ * @phpstan-import-type SerializedJobEvent from JobEventInterface
  */
-class Event implements EventInterface
+class Event implements JobEventInterface
 {
     /**
      * @var non-empty-string
@@ -32,7 +32,7 @@ class Event implements EventInterface
     /**
      * @param non-empty-string $job
      */
-    public function withJob(string $job): EventInterface
+    public function withJob(string $job): JobEventInterface
     {
         $event = new Event($this->sequenceNumber, $this->type, $this->resourceReference, $this->body);
         $event->job = $job;

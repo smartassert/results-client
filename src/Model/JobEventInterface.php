@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Model;
 
 /**
- * @phpstan-type SerializedEvent array{
+ * @phpstan-type SerializedJobEvent array{
+ *     job?: non-empty-string,
  *     sequence_number: positive-int,
  *     type: non-empty-string,
  *     body: array<mixed>,
@@ -14,12 +15,15 @@ namespace SmartAssert\ResultsClient\Model;
  *     reference: non-empty-string
  * }
  */
-interface EventInterface
+interface JobEventInterface extends EventInterface
 {
     /**
-     * @return SerializedEvent
+     * @return SerializedJobEvent
      */
     public function toArray(): array;
 
-    public function withRelatedReferences(ResourceReferenceCollectionInterface $relatedReferences): EventInterface;
+    /**
+     * @param non-empty-string $job
+     */
+    public function withJob(string $job): JobEventInterface;
 }
