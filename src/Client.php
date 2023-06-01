@@ -37,8 +37,10 @@ class Client
      * @param non-empty-string $label
      *
      * @throws ClientExceptionInterface
+     * @throws NetworkExceptionInterface
+     * @throws HttpResponseExceptionInterface
+     * @throws CurlExceptionInterface
      * @throws InvalidResponseDataException
-     * @throws NonSuccessResponseException
      * @throws InvalidModelDataException
      * @throws InvalidResponseTypeException
      */
@@ -119,8 +121,10 @@ class Client
      * @return EventInterface[]
      *
      * @throws ClientExceptionInterface
+     * @throws NetworkExceptionInterface
+     * @throws HttpResponseExceptionInterface
+     * @throws CurlExceptionInterface
      * @throws InvalidResponseDataException
-     * @throws NonSuccessResponseException
      * @throws InvalidResponseTypeException
      */
     public function listEvents(string $token, string $jobLabel, ?string $reference, ?string $type): array
