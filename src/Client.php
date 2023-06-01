@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient;
 
 use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\NetworkExceptionInterface;
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event;
@@ -12,6 +13,8 @@ use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
+use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
+use SmartAssert\ServiceClient\Exception\HttpResponseExceptionInterface;
 use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
 use SmartAssert\ServiceClient\Exception\InvalidResponseDataException;
 use SmartAssert\ServiceClient\Exception\InvalidResponseTypeException;
@@ -68,8 +71,10 @@ class Client
 
     /**
      * @throws ClientExceptionInterface
+     * @throws NetworkExceptionInterface
+     * @throws HttpResponseExceptionInterface
+     * @throws CurlExceptionInterface
      * @throws InvalidResponseDataException
-     * @throws NonSuccessResponseException
      * @throws InvalidJobTokenException
      * @throws InvalidModelDataException
      * @throws InvalidResponseTypeException
