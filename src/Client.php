@@ -11,6 +11,7 @@ use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
+use SmartAssert\ResultsClient\Model\JobState;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
@@ -69,6 +70,45 @@ class Client
         }
 
         return new Job($label, $token);
+    }
+
+    /**
+     * @param non-empty-string $token
+     * @param non-empty-string $label
+     *
+     * @throws ClientExceptionInterface
+     * @throws NetworkExceptionInterface
+     * @throws HttpResponseExceptionInterface
+     * @throws CurlExceptionInterface
+     * @throws InvalidResponseDataException
+     * @throws InvalidModelDataException
+     * @throws InvalidResponseTypeException
+     */
+    public function getJobStatus(string $token, string $label): JobState
+    {
+        $response = $this->serviceClient->sendRequest(
+            (new Request('GET', $this->createUrl('/job/' . $label)))
+                ->withAuthentication(new BearerAuthentication($token))
+        );
+
+        if (!$response->isSuccessful()) {
+            throw new NonSuccessResponseException($response->getHttpResponse());
+        }
+
+        if (!$response instanceof JsonResponse) {
+            throw InvalidResponseTypeException::create($response, JsonResponse::class);
+        }
+
+        $responseDataInspector = new ArrayInspector($response->getData());
+
+        $state = $responseDataInspector->getNonEmptyString('state');
+        $endState = $responseDataInspector->getNonEmptyString('end_state');
+
+        if (null === $state) {
+            throw InvalidModelDataException::fromJsonResponse(JobState::class, $response);
+        }
+
+        return new JobState($state, $endState);
     }
 
     /**
