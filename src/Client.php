@@ -6,11 +6,13 @@ namespace SmartAssert\ResultsClient;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
+use Psr\Http\Client\RequestExceptionInterface;
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
+use SmartAssert\ResultsClient\Model\JobState;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
@@ -46,18 +48,7 @@ class Client
      */
     public function createJob(string $token, string $label): Job
     {
-        $response = $this->serviceClient->sendRequest(
-            (new Request('POST', $this->createUrl('/job/' . $label)))
-                ->withAuthentication(new BearerAuthentication($token))
-        );
-
-        if (!$response->isSuccessful()) {
-            throw new NonSuccessResponseException($response->getHttpResponse());
-        }
-
-        if (!$response instanceof JsonResponse) {
-            throw InvalidResponseTypeException::create($response, JsonResponse::class);
-        }
+        $response = $this->makeJobRequest('POST', $token, $label);
 
         $responseDataInspector = new ArrayInspector($response->getData());
 
@@ -69,6 +60,34 @@ class Client
         }
 
         return new Job($label, $token);
+    }
+
+    /**
+     * @param non-empty-string $token
+     * @param non-empty-string $label
+     *
+     * @throws ClientExceptionInterface
+     * @throws NetworkExceptionInterface
+     * @throws HttpResponseExceptionInterface
+     * @throws CurlExceptionInterface
+     * @throws InvalidResponseDataException
+     * @throws InvalidModelDataException
+     * @throws InvalidResponseTypeException
+     */
+    public function getJobStatus(string $token, string $label): JobState
+    {
+        $response = $this->makeJobRequest('GET', $token, $label);
+
+        $responseDataInspector = new ArrayInspector($response->getData());
+
+        $state = $responseDataInspector->getNonEmptyString('state');
+        $endState = $responseDataInspector->getNonEmptyString('end_state');
+
+        if (null === $state) {
+            throw InvalidModelDataException::fromJsonResponse(JobState::class, $response);
+        }
+
+        return new JobState($state, $endState);
     }
 
     /**
@@ -170,6 +189,36 @@ class Client
         });
 
         return $events;
+    }
+
+    /**
+     * @param non-empty-string $method
+     * @param non-empty-string $token
+     * @param non-empty-string $label
+     *
+     * @throws CurlExceptionInterface
+     * @throws NetworkExceptionInterface
+     * @throws RequestExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws NonSuccessResponseException
+     * @throws InvalidResponseTypeException
+     */
+    private function makeJobRequest(string $method, string $token, string $label): JsonResponse
+    {
+        $response = $this->serviceClient->sendRequest(
+            (new Request($method, $this->createUrl('/job/' . $label)))
+                ->withAuthentication(new BearerAuthentication($token))
+        );
+
+        if (!$response->isSuccessful()) {
+            throw new NonSuccessResponseException($response->getHttpResponse());
+        }
+
+        if (!$response instanceof JsonResponse) {
+            throw InvalidResponseTypeException::create($response, JsonResponse::class);
+        }
+
+        return $response;
     }
 
     /**
