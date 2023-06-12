@@ -54,12 +54,15 @@ class Client
 
         $label = $responseDataInspector->getNonEmptyString('label');
         $token = $responseDataInspector->getNonEmptyString('token');
+        $state = $responseDataInspector->getNonEmptyString('state');
 
-        if (null === $label || null === $token) {
+        if (null === $label || null === $token || null === $state) {
             throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
         }
 
-        return new Job($label, $token);
+        $endState = $responseDataInspector->getNonEmptyString('endState');
+
+        return new Job($label, $token, new JobState($state, $endState));
     }
 
     /**

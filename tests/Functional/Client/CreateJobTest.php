@@ -7,6 +7,7 @@ namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\Job;
+use SmartAssert\ResultsClient\Model\JobState;
 
 class CreateJobTest extends AbstractClientModelCreationTest
 {
@@ -20,6 +21,8 @@ class CreateJobTest extends AbstractClientModelCreationTest
             (string) json_encode([
                 'label' => $jobLabel,
                 'token' => 'job token',
+                'state' => 'awaiting-events',
+                'end_state' => null,
             ])
         ));
 
@@ -61,9 +64,11 @@ class CreateJobTest extends AbstractClientModelCreationTest
                     (string) json_encode([
                         'label' => $label,
                         'token' => $token,
+                        'state' => 'awaiting-events',
+                        'end_state' => null,
                     ])
                 ),
-                'expected' => new Job($label, $token),
+                'expected' => new Job($label, $token, new JobState('awaiting-events', null)),
             ],
         ];
     }

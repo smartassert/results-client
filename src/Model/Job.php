@@ -13,6 +13,7 @@ class Job
     public function __construct(
         public readonly string $label,
         public readonly string $token,
+        public readonly JobState $state,
     ) {
     }
 }
