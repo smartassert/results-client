@@ -1,4 +1,4 @@
-single_line_empty_body<?php
+<?php
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/src')
