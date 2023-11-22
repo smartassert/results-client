@@ -8,7 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\JobState;
 
-class GetJobTest extends AbstractClientModelCreationTest
+class GetJobTest extends AbstractClientModelCreationTestCase
 {
     public function testGetJobStatusRequestProperties(): void
     {
@@ -46,7 +46,7 @@ class GetJobTest extends AbstractClientModelCreationTest
     /**
      * @return array<mixed>
      */
-    public function getJobStatusSuccessDataProvider(): array
+    public static function getJobStatusSuccessDataProvider(): array
     {
         return [
             'state=started, no end_state' => [

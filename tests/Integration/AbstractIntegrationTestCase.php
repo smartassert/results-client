@@ -20,7 +20,7 @@ use SmartAssert\UsersClient\Model\Token;
 use SmartAssert\UsersClient\Model\User;
 use Symfony\Component\Uid\Ulid;
 
-abstract class AbstractIntegrationTest extends TestCase
+abstract class AbstractIntegrationTestCase extends TestCase
 {
     protected const USER1_EMAIL = 'user1@example.com';
     protected const USER1_PASSWORD = 'password';

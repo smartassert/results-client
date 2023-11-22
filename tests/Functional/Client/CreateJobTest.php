@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\JobState;
 
-class CreateJobTest extends AbstractClientModelCreationTest
+class CreateJobTest extends AbstractClientModelCreationTestCase
 {
     public function testCreateJobRequestProperties(): void
     {
@@ -49,7 +49,7 @@ class CreateJobTest extends AbstractClientModelCreationTest
     /**
      * @return array<mixed>
      */
-    public function createApiTokenSuccessDataProvider(): array
+    public static function createApiTokenSuccessDataProvider(): array
     {
         $label = md5((string) rand());
         $token = md5((string) rand());

@@ -7,7 +7,7 @@ namespace SmartAssert\ResultsClient\Tests\Integration;
 use SmartAssert\ResultsClient\Model\JobState;
 use Symfony\Component\Uid\Ulid;
 
-class GetJobTest extends AbstractIntegrationTest
+class GetJobTest extends AbstractIntegrationTestCase
 {
     public function testGetJobStatus(): void
     {
