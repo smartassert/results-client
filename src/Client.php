@@ -25,12 +25,12 @@ use SmartAssert\ServiceClient\Payload\JsonPayload;
 use SmartAssert\ServiceClient\Request;
 use SmartAssert\ServiceClient\Response\JsonResponse;
 
-class Client
+readonly class Client
 {
     public function __construct(
-        private readonly string $baseUrl,
-        private readonly ServiceClient $serviceClient,
-        private readonly EventFactory $eventFactory,
+        private string $baseUrl,
+        private ServiceClient $serviceClient,
+        private EventFactory $eventFactory,
     ) {
     }
 

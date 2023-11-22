@@ -11,10 +11,10 @@ use SmartAssert\ResultsClient\Model\JobEventInterface;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
-class EventFactory
+readonly class EventFactory
 {
     public function __construct(
-        private readonly ResourceReferenceFactory $resourceReferenceFactory,
+        private ResourceReferenceFactory $resourceReferenceFactory,
     ) {
     }
 
