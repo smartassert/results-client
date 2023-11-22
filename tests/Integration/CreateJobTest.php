@@ -8,7 +8,7 @@ use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\JobState;
 use Symfony\Component\Uid\Ulid;
 
-class CreateJobTest extends AbstractIntegrationTest
+class CreateJobTest extends AbstractIntegrationTestCase
 {
     public function testCreateJob(): void
     {

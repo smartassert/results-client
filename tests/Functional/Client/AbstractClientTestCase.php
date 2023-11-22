@@ -25,7 +25,7 @@ use SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory;
 use SmartAssert\ServiceClient\ResponseFactory\ResponseFactory;
 use webignition\HttpHistoryContainer\Container as HttpHistoryContainer;
 
-abstract class AbstractClientTest extends TestCase
+abstract class AbstractClientTestCase extends TestCase
 {
     use CommonNonSuccessResponseDataProviderTrait;
     use InvalidJsonResponseExceptionDataProviderTrait;

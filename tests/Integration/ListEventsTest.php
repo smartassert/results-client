@@ -11,7 +11,7 @@ use SmartAssert\ResultsClient\Model\ResourceReference;
 use SmartAssert\UsersClient\Model\Token;
 use Symfony\Component\Uid\Ulid;
 
-class ListEventsTest extends AbstractIntegrationTest
+class ListEventsTest extends AbstractIntegrationTestCase
 {
     private static Token $user2ApiToken;
 
@@ -87,7 +87,7 @@ class ListEventsTest extends AbstractIntegrationTest
     /**
      * @return array<mixed>
      */
-    public function listDataProvider(): array
+    public static function listDataProvider(): array
     {
         return [
             'invalid job user' => [

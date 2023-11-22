@@ -10,7 +10,7 @@ use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\ResourceReference;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 
-class AddEventTest extends AbstractIntegrationTest
+class AddEventTest extends AbstractIntegrationTestCase
 {
     public function testAddInvalidJobToken(): void
     {
@@ -43,7 +43,7 @@ class AddEventTest extends AbstractIntegrationTest
     /**
      * @return array<mixed>
      */
-    public function addSuccessDataProvider(): array
+    public static function addSuccessDataProvider(): array
     {
         return [
             'without related references, empty body' => [

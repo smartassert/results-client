@@ -7,7 +7,7 @@ namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 use GuzzleHttp\Psr7\Response;
 use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
 
-abstract class AbstractClientModelCreationTest extends AbstractClientTest
+abstract class AbstractClientModelCreationTestCase extends AbstractClientTestCase
 {
     public function testClientActionThrowsInvalidModelDataException(): void
     {

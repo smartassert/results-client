@@ -6,7 +6,7 @@ namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 
 use GuzzleHttp\Psr7\Response;
 
-class ListEventsTest extends AbstractClientTest
+class ListEventsTest extends AbstractClientTestCase
 {
     public function testListEventsRequestProperties(): void
     {

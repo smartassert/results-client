@@ -8,7 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\ResourceReference;
 
-class AddEventTest extends AbstractClientModelCreationTest
+class AddEventTest extends AbstractClientModelCreationTestCase
 {
     public function testAddEventRequestProperties(): void
     {
