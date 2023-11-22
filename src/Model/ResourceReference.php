@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Model;
 
-class ResourceReference implements ResourceReferenceInterface
+readonly class ResourceReference implements ResourceReferenceInterface
 {
     /**
      * @param non-empty-string $label
      * @param non-empty-string $reference
      */
     public function __construct(
-        public readonly string $label,
-        public readonly string $reference,
+        public string $label,
+        public string $reference,
     ) {
     }
 
