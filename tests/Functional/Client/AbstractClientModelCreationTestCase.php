@@ -21,7 +21,7 @@ abstract class AbstractClientModelCreationTestCase extends AbstractClientTestCas
             self::fail(InvalidModelDataException::class . ' not thrown');
         } catch (InvalidModelDataException $e) {
             self::assertSame($this->getExpectedModelClass(), $e->class);
-            self::assertSame($response, $e->response);
+            self::assertSame($response, $e->getHttpResponse());
             self::assertSame($responsePayload, $e->payload);
         }
     }
