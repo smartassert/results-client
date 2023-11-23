@@ -110,7 +110,7 @@ readonly class Client
     public function addEvent(string $jobToken, EventInterface $event): EventInterface
     {
         try {
-            $response = $this->serviceClient->sendRequest(
+            $response = $this->serviceClient->sendRequestForJson(
                 (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
                     ->withAuthentication(new BearerAuthentication($jobToken))
                     ->withPayload(new JsonPayload($event->toArray()))
@@ -121,10 +121,6 @@ readonly class Client
             }
 
             throw $e;
-        }
-
-        if (!$response instanceof JsonResponse) {
-            throw InvalidResponseTypeException::create($response, JsonResponse::class);
         }
 
         $responseDataInspector = new ArrayInspector($response->getData());
@@ -171,13 +167,9 @@ readonly class Client
             $url .= '?' . http_build_query($queryParameters);
         }
 
-        $response = $this->serviceClient->sendRequest(
+        $response = $this->serviceClient->sendRequestForJson(
             (new Request('GET', $url))->withAuthentication(new BearerAuthentication($token))
         );
-
-        if (!$response instanceof JsonResponse) {
-            throw InvalidResponseTypeException::create($response, JsonResponse::class);
-        }
 
         $events = [];
 
@@ -210,16 +202,10 @@ readonly class Client
      */
     private function makeJobRequest(string $method, string $token, string $label): JsonResponse
     {
-        $response = $this->serviceClient->sendRequest(
+        return $this->serviceClient->sendRequestForJson(
             (new Request($method, $this->createUrl('/job/' . $label)))
                 ->withAuthentication(new BearerAuthentication($token))
         );
-
-        if (!$response instanceof JsonResponse) {
-            throw InvalidResponseTypeException::create($response, JsonResponse::class);
-        }
-
-        return $response;
     }
 
     /**
