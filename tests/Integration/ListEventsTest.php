@@ -8,12 +8,14 @@ use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\ResourceReference;
-use SmartAssert\UsersClient\Model\Token;
 use Symfony\Component\Uid\Ulid;
 
 class ListEventsTest extends AbstractIntegrationTestCase
 {
-    private static Token $user2ApiToken;
+    /**
+     * @var non-empty-string
+     */
+    private static string $user2ApiToken;
 
     /**
      * @var non-empty-string
@@ -25,13 +27,13 @@ class ListEventsTest extends AbstractIntegrationTestCase
     {
         parent::setUpBeforeClass();
 
-        self::$user2ApiToken = self::createUserApiToken(self::USER2_EMAIL, self::USER2_PASSWORD);
+        self::$user2ApiToken = self::createUserApiToken(self::USER2_EMAIL);
 
         $user2JobLabel = (string) new Ulid();
         \assert('' !== $user2JobLabel);
         self::$user2JobLabel = $user2JobLabel;
 
-        $job = self::$client->createJob(self::$user2ApiToken->token, self::$user2JobLabel);
+        $job = self::$client->createJob(self::$user2ApiToken, self::$user2JobLabel);
         \assert($job instanceof Job);
         self::$user2Job = $job;
 
@@ -61,7 +63,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
     }
 
     /**
-     * @param callable(): Token            $apiTokenCreator
+     * @param callable(): non-empty-string $apiTokenCreator
      * @param callable(): non-empty-string $jobLabelCreator
      * @param ?non-empty-string            $eventReference
      * @param ?non-empty-string            $type
@@ -80,7 +82,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
 
         self::assertEquals(
             $expectedEventsCreator(),
-            self::$client->listEvents($apiToken->token, $jobLabelCreator(), $eventReference, $type)
+            self::$client->listEvents($apiToken, $jobLabelCreator(), $eventReference, $type)
         );
     }
 
