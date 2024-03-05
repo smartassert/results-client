@@ -15,7 +15,7 @@ class CreateJobTest extends AbstractIntegrationTestCase
         $jobLabel = (string) new Ulid();
         \assert('' !== $jobLabel);
 
-        $job = self::$client->createJob(self::$user1ApiToken->token, $jobLabel);
+        $job = self::$client->createJob(self::$user1ApiToken, $jobLabel);
         self::assertInstanceOf(Job::class, $job);
 
         self::assertSame($jobLabel, $job->label);

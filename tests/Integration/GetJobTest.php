@@ -14,9 +14,9 @@ class GetJobTest extends AbstractIntegrationTestCase
         $jobLabel = (string) new Ulid();
         \assert('' !== $jobLabel);
 
-        self::$client->createJob(self::$user1ApiToken->token, $jobLabel);
+        self::$client->createJob(self::$user1ApiToken, $jobLabel);
 
-        $jobStatus = self::$client->getJobStatus(self::$user1ApiToken->token, $jobLabel);
+        $jobStatus = self::$client->getJobStatus(self::$user1ApiToken, $jobLabel);
         self::assertEquals(new JobState('awaiting-events', null), $jobStatus);
     }
 }
