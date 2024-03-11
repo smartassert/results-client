@@ -18,7 +18,7 @@ class CreateJobTest extends AbstractIntegrationTestCase
         $job = self::$client->createJob(self::$user1ApiToken, $jobLabel);
         self::assertInstanceOf(Job::class, $job);
 
-        self::assertSame($jobLabel, $job->label);
-        self::assertEquals(new JobState('awaiting-events', null), $job->state);
+        self::assertSame($jobLabel, $job->getLabel());
+        self::assertEquals(new JobState('awaiting-events', null), $job->getState());
     }
 }
