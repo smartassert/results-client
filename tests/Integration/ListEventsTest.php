@@ -42,22 +42,22 @@ class ListEventsTest extends AbstractIntegrationTestCase
         $user2Test1Reference = new ResourceReference('user2test1.yml', md5('user2test1.yml'));
 
         self::$client->addEvent(
-            self::$user1Job->getToken(),
+            self::$user1Job->token,
             new Event(1, 'type_1', $user1Test1Reference, [])
         );
 
         self::$client->addEvent(
-            self::$user1Job->getToken(),
+            self::$user1Job->token,
             new Event(2, 'type_2', $user1Test1Reference, [])
         );
 
         self::$client->addEvent(
-            self::$user1Job->getToken(),
+            self::$user1Job->token,
             new Event(3, 'type_1', $user1Test2Reference, [])
         );
 
         self::$client->addEvent(
-            self::$user2Job->getToken(),
+            self::$user2Job->token,
             new Event(1, 'type_1', $user2Test1Reference, [])
         );
     }

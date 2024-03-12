@@ -12,7 +12,6 @@ use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
-use SmartAssert\ResultsClient\Model\JobInterface;
 use SmartAssert\ResultsClient\Model\JobState;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
@@ -49,7 +48,7 @@ readonly class Client
      * @throws InvalidResponseTypeException
      * @throws UnauthorizedException
      */
-    public function createJob(string $token, string $label): JobInterface
+    public function createJob(string $token, string $label): Job
     {
         $response = $this->makeJobRequest('POST', $token, $label);
 
