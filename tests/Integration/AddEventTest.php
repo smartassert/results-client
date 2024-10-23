@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Tests\Integration;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
@@ -30,10 +31,9 @@ class AddEventTest extends AbstractIntegrationTestCase
     }
 
     /**
-     * @dataProvider addSuccessDataProvider
-     *
      * @param callable(string): EventInterface $expectedEventCreator
      */
+    #[DataProvider('addSuccessDataProvider')]
     public function testAddSuccess(Event $event, callable $expectedEventCreator): void
     {
         $jobEvent = self::$client->addEvent(self::$user1Job->token, $event);
