@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\JobState;
 
@@ -32,9 +33,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
         self::assertSame('Bearer ' . $apiKey, $request->getHeaderLine('authorization'));
     }
 
-    /**
-     * @dataProvider getJobStatusSuccessDataProvider
-     */
+    #[DataProvider('getJobStatusSuccessDataProvider')]
     public function testGetJobStatusSuccess(ResponseInterface $httpFixture, JobState $expected): void
     {
         $this->mockHandler->append($httpFixture);

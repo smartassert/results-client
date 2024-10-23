@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Tests\Integration;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
@@ -68,9 +69,8 @@ class ListEventsTest extends AbstractIntegrationTestCase
      * @param ?non-empty-string            $eventReference
      * @param ?non-empty-string            $type
      * @param callable(): EventInterface[] $expectedEventsCreator
-     *
-     * @dataProvider listDataProvider
      */
+    #[DataProvider('listDataProvider')]
     public function testList(
         callable $apiTokenCreator,
         callable $jobLabelCreator,
