@@ -15,4 +15,9 @@ readonly class JobState
         public ?string $endState,
     ) {
     }
+
+    public function hasEndState(): bool
+    {
+        return is_string($this->endState);
+    }
 }
