@@ -93,7 +93,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
     {
         return [
             'invalid job user' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user2ApiToken;
                 },
                 'jobLabelCreator' => function () {
@@ -106,7 +106,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
                 },
             ],
             'job does not exist' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user1ApiToken;
                 },
                 'jobLabelCreator' => function () {
@@ -119,7 +119,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
                 },
             ],
             'no matching events' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user1ApiToken;
                 },
                 'jobLabelCreator' => function () {
@@ -132,7 +132,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
                 },
             ],
             'single event, matches reference (user 1)' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user1ApiToken;
                 },
                 'jobLabelCreator' => function () {
@@ -152,7 +152,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
                 },
             ],
             'single event, matches reference (user 2)' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user2ApiToken;
                 },
                 'jobLabelCreator' => function () {
@@ -172,7 +172,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
                 },
             ],
             'two events match reference' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user1ApiToken;
                 },
                 'jobLabelCreator' => function () {
@@ -198,7 +198,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
                 },
             ],
             'single event, matches reference (user 1), excluded by type filter' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user1ApiToken;
                 },
                 'jobLabelCreator' => function () {
@@ -211,7 +211,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
                 },
             ],
             'two events match reference, one excluded by type filter' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user1ApiToken;
                 },
                 'jobLabelCreator' => function () {
@@ -231,7 +231,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
                 },
             ],
             'no reference, no type' => [
-                'apiToken' => function () {
+                'apiTokenCreator' => function () {
                     return self::$user1ApiToken;
                 },
                 'jobLabelCreator' => function () {
