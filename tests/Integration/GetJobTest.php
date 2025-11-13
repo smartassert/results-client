@@ -12,8 +12,6 @@ class GetJobTest extends AbstractIntegrationTestCase
     public function testGetJobStatus(): void
     {
         $jobLabel = (string) new Ulid();
-        \assert('' !== $jobLabel);
-
         self::$client->createJob(self::$user1ApiToken, $jobLabel);
 
         $jobStatus = self::$client->getJobStatus(self::$user1ApiToken, $jobLabel);
