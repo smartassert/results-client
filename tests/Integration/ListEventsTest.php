@@ -34,9 +34,7 @@ class ListEventsTest extends AbstractIntegrationTestCase
         \assert('' !== $user2JobLabel);
         self::$user2JobLabel = $user2JobLabel;
 
-        $job = self::$client->createJob(self::$user2ApiToken, self::$user2JobLabel);
-        \assert($job instanceof Job);
-        self::$user2Job = $job;
+        self::$user2Job = self::$client->createJob(self::$user2ApiToken, self::$user2JobLabel);
 
         $user1Test1Reference = new ResourceReference('user1test1.yml', md5('user1test1.yml'));
         $user1Test2Reference = new ResourceReference('user1test2.yml', md5('user1test2.yml'));
