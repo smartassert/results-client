@@ -7,7 +7,6 @@ namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +24,7 @@ use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory;
 use SmartAssert\ServiceClient\ResponseFactory\ResponseFactory;
 use webignition\HttpHistoryContainer\Container as HttpHistoryContainer;
+use webignition\HttpHistoryContainer\MiddlewareFactory;
 
 abstract class AbstractClientTestCase extends TestCase
 {
@@ -47,7 +47,7 @@ abstract class AbstractClientTestCase extends TestCase
         $handlerStack = HandlerStack::create($this->mockHandler);
 
         $this->httpHistoryContainer = new HttpHistoryContainer();
-        $handlerStack->push(Middleware::history($this->httpHistoryContainer));
+        $handlerStack->push(MiddlewareFactory::create($this->httpHistoryContainer));
 
         $this->client = new Client(
             'https://users.example.com',

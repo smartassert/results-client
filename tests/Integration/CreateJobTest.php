@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Tests\Integration;
 
-use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\JobState;
 use Symfony\Component\Uid\Ulid;
 
