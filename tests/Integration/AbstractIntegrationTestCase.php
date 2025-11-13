@@ -54,9 +54,7 @@ abstract class AbstractIntegrationTestCase extends TestCase
         \assert('' !== $jobLabel);
         self::$user1JobLabel = $jobLabel;
 
-        $job = self::$client->createJob(self::$user1ApiToken, $jobLabel);
-        \assert($job instanceof Job);
-        self::$user1Job = $job;
+        self::$user1Job = self::$client->createJob(self::$user1ApiToken, $jobLabel);
     }
 
     /**
