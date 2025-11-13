@@ -31,7 +31,6 @@ class ListEventsTest extends AbstractIntegrationTestCase
         self::$user2ApiToken = self::createUserApiToken(self::USER2_EMAIL);
 
         $user2JobLabel = (string) new Ulid();
-        \assert('' !== $user2JobLabel);
         self::$user2JobLabel = $user2JobLabel;
 
         self::$user2Job = self::$client->createJob(self::$user2ApiToken, self::$user2JobLabel);
