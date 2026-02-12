@@ -13,6 +13,7 @@ use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\JobState;
+use SmartAssert\ResultsClient\Model\MetaState;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
@@ -47,8 +48,9 @@ readonly class Client implements ClientInterface
         }
 
         $endState = $responseDataInspector->getNonEmptyString('endState');
+        $metaState = $this->getJobMetaState($responseDataInspector);
 
-        return new Job($label, $token, new JobState($state, $endState));
+        return new Job($label, $token, new JobState($state, $endState, $metaState));
     }
 
     public function getJobStatus(string $token, string $label): JobState
@@ -58,13 +60,14 @@ readonly class Client implements ClientInterface
         $responseDataInspector = new ArrayInspector($response->getData());
 
         $state = $responseDataInspector->getNonEmptyString('state');
-        $endState = $responseDataInspector->getNonEmptyString('end_state');
-
         if (null === $state) {
             throw InvalidModelDataException::fromJsonResponse(JobState::class, $response);
         }
 
-        return new JobState($state, $endState);
+        $endState = $responseDataInspector->getNonEmptyString('end_state');
+        $metaState = $this->getJobMetaState($responseDataInspector);
+
+        return new JobState($state, $endState, $metaState);
     }
 
     public function addEvent(string $jobToken, EventInterface $event): EventInterface
@@ -129,6 +132,18 @@ readonly class Client implements ClientInterface
         });
 
         return $events;
+    }
+
+    private function getJobMetaState(ArrayInspector $inspector): MetaState
+    {
+        $metaStateInspector = new ArrayInspector(
+            $inspector->getArray('meta_state')
+        );
+
+        return new MetaState(
+            $metaStateInspector->getBoolean('ended') ?? false,
+            $metaStateInspector->getBoolean('succeeded') ?? false,
+        );
     }
 
     /**

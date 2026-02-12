@@ -13,6 +13,7 @@ readonly class JobState
     public function __construct(
         public string $state,
         public ?string $endState,
+        public MetaState $metaState,
     ) {}
 
     public function hasEndState(): bool

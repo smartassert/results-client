@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\JobState;
+use SmartAssert\ResultsClient\Model\MetaState;
 
 class CreateJobTest extends AbstractClientModelCreationTestCase
 {
@@ -67,7 +68,15 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
                         'end_state' => null,
                     ])
                 ),
-                'expected' => new Job($label, $token, new JobState('awaiting-events', null)),
+                'expected' => new Job(
+                    $label,
+                    $token,
+                    new JobState(
+                        'awaiting-events',
+                        null,
+                        new MetaState(false, false)
+                    )
+                ),
             ],
         ];
     }
