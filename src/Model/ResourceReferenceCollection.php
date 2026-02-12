@@ -11,8 +11,7 @@ readonly class ResourceReferenceCollection implements ResourceReferenceCollectio
      */
     public function __construct(
         private array $resourceReferences = [],
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {

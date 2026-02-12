@@ -13,8 +13,7 @@ readonly class ResourceReference implements ResourceReferenceInterface
     public function __construct(
         public string $label,
         public string $reference,
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {
