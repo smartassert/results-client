@@ -14,6 +14,5 @@ readonly class Job
         public string $label,
         public string $token,
         public JobState $state,
-    ) {
-    }
+    ) {}
 }

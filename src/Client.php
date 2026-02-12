@@ -30,8 +30,7 @@ readonly class Client implements ClientInterface
         private string $baseUrl,
         private ServiceClient $serviceClient,
         private EventFactory $eventFactory,
-    ) {
-    }
+    ) {}
 
     public function createJob(string $token, string $label): Job
     {

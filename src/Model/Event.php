@@ -26,8 +26,7 @@ class Event implements JobEventInterface
         public readonly string $type,
         public readonly ResourceReferenceInterface $resourceReference,
         public readonly array $body,
-    ) {
-    }
+    ) {}
 
     /**
      * @param non-empty-string $job
