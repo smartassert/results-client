@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\JobState;
+use SmartAssert\ResultsClient\Model\MetaState;
 
 class GetJobTest extends AbstractClientModelCreationTestCase
 {
@@ -56,9 +57,13 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ],
                     (string) json_encode([
                         'state' => 'started',
+                        'meta_state' => [
+                            'ended' => false,
+                            'succeeded' => false,
+                        ],
                     ])
                 ),
-                'expected' => new JobState('started', null),
+                'expected' => new JobState('started', null, new MetaState(false, false)),
             ],
             'state=complete,end_state=ended' => [
                 'httpFixture' => new Response(
@@ -69,9 +74,13 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     (string) json_encode([
                         'state' => 'complete',
                         'end_state' => 'ended',
+                        'meta_state' => [
+                            'ended' => true,
+                            'succeeded' => true,
+                        ],
                     ])
                 ),
-                'expected' => new JobState('complete', 'ended'),
+                'expected' => new JobState('complete', 'ended', new MetaState(true, true)),
             ],
         ];
     }
