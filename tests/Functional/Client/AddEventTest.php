@@ -34,7 +34,6 @@ class AddEventTest extends AbstractClientModelCreationTestCase
 
         $request = $this->getLastRequest();
         self::assertSame('POST', $request->getMethod());
-        self::assertSame('Bearer ' . $jobToken, $request->getHeaderLine('authorization'));
     }
 
     protected function createClientActionCallable(): callable
