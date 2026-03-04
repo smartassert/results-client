@@ -75,7 +75,6 @@ readonly class Client implements ClientInterface
         try {
             $response = $this->serviceClient->sendRequestForJson(
                 (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
-                    ->withAuthentication(new BearerAuthentication($jobToken))
                     ->withPayload(new JsonPayload($event->toArray()))
             );
         } catch (NonSuccessResponseException $e) {
