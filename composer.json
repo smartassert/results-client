@@ -71,7 +71,7 @@
         "smartassert/service-client": "^8.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "dev-master#32c1c3f8fb65051f27a2d295e9c467b7ebe9de11",
+        "friendsofphp/php-cs-fixer": "^3.94",
         "guzzlehttp/guzzle": "^7.5",
         "mockery/mockery": "^1.5",
         "phpstan/extension-installer": "^1.4",
