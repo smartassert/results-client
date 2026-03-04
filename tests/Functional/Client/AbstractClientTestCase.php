@@ -29,7 +29,7 @@ use webignition\HttpHistoryContainer\MiddlewareFactory;
 abstract class AbstractClientTestCase extends TestCase
 {
     use CommonNonSuccessResponseDataProviderTrait;
-    use InvalidJsonResponseExceptionDataProviderTrait;
+    //    use InvalidJsonResponseExceptionDataProviderTrait;
     use NetworkErrorExceptionDataProviderTrait;
 
     protected MockHandler $mockHandler;
@@ -68,8 +68,7 @@ abstract class AbstractClientTestCase extends TestCase
      * @param class-string<\Throwable> $expectedExceptionClass
      */
     #[DataProvider('networkErrorExceptionDataProvider')]
-    #[DataProvider('invalidJsonResponseExceptionDataProvider')]
-    public function testClientActionThrowsException(
+    public function testClientActionThrowsNetworkException(
         ClientExceptionInterface|ResponseInterface $httpFixture,
         string $expectedExceptionClass,
     ): void {

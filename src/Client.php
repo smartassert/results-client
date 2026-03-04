@@ -70,12 +70,11 @@ readonly class Client implements ClientInterface
         return new JobState($state, $endState, $metaState);
     }
 
-    public function addEvent(string $jobToken, EventInterface $event): EventInterface
+    public function addAndGetEvent(string $jobToken, EventInterface $event): EventInterface
     {
         try {
             $response = $this->serviceClient->sendRequestForJson(
-                (new Request('POST', $this->createUrl('/event/add/' . $jobToken)))
-                    ->withPayload(new JsonPayload($event->toArray()))
+                $this->createAddEventRequest($jobToken, $event),
             );
         } catch (NonSuccessResponseException $e) {
             if (404 === $e->getStatusCode()) {
@@ -94,6 +93,23 @@ readonly class Client implements ClientInterface
         }
 
         return $createdEvent;
+    }
+
+    public function addEvent(string $jobToken, EventInterface $event): bool
+    {
+        try {
+            $this->serviceClient->sendRequest(
+                $this->createAddEventRequest($jobToken, $event),
+            );
+        } catch (NonSuccessResponseException $e) {
+            if (404 === $e->getStatusCode()) {
+                throw new InvalidJobTokenException($jobToken);
+            }
+
+            throw $e;
+        }
+
+        return true;
     }
 
     public function listEvents(string $token, string $jobLabel, ?string $reference, ?string $type): array
@@ -131,6 +147,13 @@ readonly class Client implements ClientInterface
         });
 
         return $events;
+    }
+
+    private function createAddEventRequest(string $jobToken, EventInterface $event): Request
+    {
+        return new Request('POST', $this->createUrl('/event/add/' . $jobToken))
+            ->withPayload(new JsonPayload($event->toArray()))
+        ;
     }
 
     private function getJobMetaState(ArrayInspector $inspector): MetaState

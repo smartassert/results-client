@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Tests\Functional\Client;
+namespace Functional\Client;
 
 use GuzzleHttp\Psr7\Response;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\ResourceReference;
+use SmartAssert\ResultsClient\Tests\Functional\Client\AbstractClientModelCreationTestCase;
 
-class AddEventTest extends AbstractClientTestCase
+class AddAndGetEventTest extends AbstractClientModelCreationTestCase
 {
-    public function testAddEventRequestProperties(): void
+    public function testAddAndGetEventRequestProperties(): void
     {
         $this->mockHandler->append(new Response(
             200,
@@ -27,7 +28,7 @@ class AddEventTest extends AbstractClientTestCase
 
         $jobToken = 'job token';
 
-        $this->client->addEvent(
+        $this->client->addAndGetEvent(
             $jobToken,
             new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
         );
@@ -39,10 +40,15 @@ class AddEventTest extends AbstractClientTestCase
     protected function createClientActionCallable(): callable
     {
         return function () {
-            $this->client->addEvent(
+            $this->client->addAndGetEvent(
                 'job token',
                 new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
             );
         };
+    }
+
+    protected function getExpectedModelClass(): string
+    {
+        return Event::class;
     }
 }

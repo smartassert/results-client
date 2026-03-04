@@ -60,7 +60,17 @@ interface ClientInterface
      * @throws InvalidResponseTypeException
      * @throws UnauthorizedException
      */
-    public function addEvent(string $jobToken, EventInterface $event): EventInterface;
+    public function addAndGetEvent(string $jobToken, EventInterface $event): EventInterface;
+
+    /**
+     * @throws ClientExceptionInterface
+     * @throws NetworkExceptionInterface
+     * @throws HttpResponseExceptionInterface
+     * @throws CurlExceptionInterface
+     * @throws InvalidJobTokenException
+     * @throws UnauthorizedException
+     */
+    public function addEvent(string $jobToken, EventInterface $event): bool;
 
     /**
      * @param non-empty-string      $token
