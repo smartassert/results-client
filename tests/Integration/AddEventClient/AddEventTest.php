@@ -2,23 +2,26 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Tests\Integration;
+namespace SmartAssert\ResultsClient\Tests\Integration\AddEventClient;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\ResourceReference;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
+use SmartAssert\ResultsClient\Tests\Integration\AbstractBaseTestCase;
 
-class AddEventTest extends AbstractIntegrationTestCase
+class AddEventTest extends AbstractBaseTestCase
 {
     public function testAddInvalidJobToken(): void
     {
+        $baseUrl = 'http://localhost:9081';
         $jobToken = 'invalid token';
 
         self::expectExceptionObject(new InvalidJobTokenException($jobToken));
 
-        self::$client->addEvent(
+        self::$addEventClient->add(
+            $baseUrl,
             $jobToken,
             new Event(
                 1,
@@ -32,8 +35,10 @@ class AddEventTest extends AbstractIntegrationTestCase
     #[DataProvider('addSuccessDataProvider')]
     public function testAddSuccess(Event $event): void
     {
+        $baseUrl = 'http://localhost:9081';
+
         self::assertTrue(
-            self::$client->addEvent(self::$user1Job->token, $event),
+            self::$addEventClient->add($baseUrl, self::$user1Job->token, $event),
         );
     }
 

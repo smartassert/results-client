@@ -6,7 +6,6 @@ namespace SmartAssert\ResultsClient;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
-use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\JobState;
@@ -48,29 +47,6 @@ interface ClientInterface
      * @throws UnauthorizedException
      */
     public function getJobStatus(string $token, string $label): JobState;
-
-    /**
-     * @throws ClientExceptionInterface
-     * @throws NetworkExceptionInterface
-     * @throws HttpResponseExceptionInterface
-     * @throws CurlExceptionInterface
-     * @throws InvalidResponseDataException
-     * @throws InvalidJobTokenException
-     * @throws InvalidModelDataException
-     * @throws InvalidResponseTypeException
-     * @throws UnauthorizedException
-     */
-    public function addAndGetEvent(string $jobToken, EventInterface $event): EventInterface;
-
-    /**
-     * @throws ClientExceptionInterface
-     * @throws NetworkExceptionInterface
-     * @throws HttpResponseExceptionInterface
-     * @throws CurlExceptionInterface
-     * @throws InvalidJobTokenException
-     * @throws UnauthorizedException
-     */
-    public function addEvent(string $jobToken, EventInterface $event): bool;
 
     /**
      * @param non-empty-string      $token

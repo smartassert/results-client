@@ -8,8 +8,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
 use Psr\Http\Client\RequestExceptionInterface;
 use SmartAssert\ArrayInspector\ArrayInspector;
-use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
-use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\JobState;
@@ -21,7 +19,6 @@ use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
 use SmartAssert\ServiceClient\Exception\InvalidResponseTypeException;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\Exception\UnauthorizedException;
-use SmartAssert\ServiceClient\Payload\JsonPayload;
 use SmartAssert\ServiceClient\Request;
 use SmartAssert\ServiceClient\Response\JsonResponse;
 
@@ -70,48 +67,6 @@ readonly class Client implements ClientInterface
         return new JobState($state, $endState, $metaState);
     }
 
-    public function addAndGetEvent(string $jobToken, EventInterface $event): EventInterface
-    {
-        try {
-            $response = $this->serviceClient->sendRequestForJson(
-                $this->createAddEventRequest($jobToken, $event),
-            );
-        } catch (NonSuccessResponseException $e) {
-            if (404 === $e->getStatusCode()) {
-                throw new InvalidJobTokenException($jobToken);
-            }
-
-            throw $e;
-        }
-
-        $responseDataInspector = new ArrayInspector($response->getData());
-
-        $createdEvent = $this->eventFactory->create($responseDataInspector);
-
-        if (null === $createdEvent) {
-            throw InvalidModelDataException::fromJsonResponse(Event::class, $response);
-        }
-
-        return $createdEvent;
-    }
-
-    public function addEvent(string $jobToken, EventInterface $event): bool
-    {
-        try {
-            $this->serviceClient->sendRequest(
-                $this->createAddEventRequest($jobToken, $event),
-            );
-        } catch (NonSuccessResponseException $e) {
-            if (404 === $e->getStatusCode()) {
-                throw new InvalidJobTokenException($jobToken);
-            }
-
-            throw $e;
-        }
-
-        return true;
-    }
-
     public function listEvents(string $token, string $jobLabel, ?string $reference, ?string $type): array
     {
         $url = $this->createUrl('/event/list/' . $jobLabel);
@@ -147,13 +102,6 @@ readonly class Client implements ClientInterface
         });
 
         return $events;
-    }
-
-    private function createAddEventRequest(string $jobToken, EventInterface $event): Request
-    {
-        return new Request('POST', $this->createUrl('/event/add/' . $jobToken))
-            ->withPayload(new JsonPayload($event->toArray()))
-        ;
     }
 
     private function getJobMetaState(ArrayInspector $inspector): MetaState
