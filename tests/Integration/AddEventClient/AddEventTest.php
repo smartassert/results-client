@@ -38,7 +38,7 @@ class AddEventTest extends AbstractBaseTestCase
         $baseUrl = 'http://localhost:9081';
 
         self::assertTrue(
-            self::$addEventClient->add($baseUrl, self::$user1Job->token, $event),
+            self::$addEventClient->add($baseUrl, self::$user1Job->authenticator, $event),
         );
     }
 

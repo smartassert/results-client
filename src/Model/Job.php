@@ -8,11 +8,11 @@ readonly class Job
 {
     /**
      * @param non-empty-string $label
-     * @param non-empty-string $token
+     * @param non-empty-string $authenticator
      */
     public function __construct(
         public string $label,
-        public string $token,
+        public string $authenticator,
         public JobState $state,
     ) {}
 }
