@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Tests\Integration;
+namespace SmartAssert\ResultsClient\Tests\Integration\Client;
 
 use SmartAssert\ResultsClient\Model\JobState;
 use SmartAssert\ResultsClient\Model\MetaState;
+use SmartAssert\ResultsClient\Tests\Integration\AbstractBaseTestCase;
 use Symfony\Component\Uid\Ulid;
 
-class CreateJobTest extends AbstractIntegrationTestCase
+class CreateJobTest extends AbstractBaseTestCase
 {
     public function testCreateJob(): void
     {

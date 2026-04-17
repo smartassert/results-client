@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Functional\Client;
+namespace SmartAssert\ResultsClient\Tests\Functional\AddEventClient;
 
 use GuzzleHttp\Psr7\Response;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\ResourceReference;
-use SmartAssert\ResultsClient\Tests\Functional\Client\AbstractClientModelCreationTestCase;
 
-class AddAndGetEventTest extends AbstractClientModelCreationTestCase
+class AddEventTest extends AbstractClientTestCase
 {
-    public function testAddAndGetEventRequestProperties(): void
+    public function testAddEventRequestProperties(): void
     {
+        $baseUrl = 'https://' . md5((string) rand());
+
         $this->mockHandler->append(new Response(
             200,
             ['content-type' => 'application/json'],
@@ -26,29 +27,27 @@ class AddAndGetEventTest extends AbstractClientModelCreationTestCase
             ])
         ));
 
-        $jobToken = 'job token';
+        $jobToken = md5((string) rand());
 
-        $this->client->addAndGetEvent(
+        $this->client->add(
+            $baseUrl,
             $jobToken,
             new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
         );
 
         $request = $this->getLastRequest();
         self::assertSame('POST', $request->getMethod());
+        self::assertSame($baseUrl . '/event/add/' . $jobToken, $request->getUri()->__toString());
     }
 
     protected function createClientActionCallable(): callable
     {
         return function () {
-            $this->client->addAndGetEvent(
+            $this->client->add(
+                'https://' . md5((string) rand()),
                 'job token',
                 new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
             );
         };
-    }
-
-    protected function getExpectedModelClass(): string
-    {
-        return Event::class;
     }
 }

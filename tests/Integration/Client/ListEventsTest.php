@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\ResultsClient\Tests\Integration;
+namespace SmartAssert\ResultsClient\Tests\Integration\Client;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\ResourceReference;
+use SmartAssert\ResultsClient\Tests\Integration\AbstractBaseTestCase;
 use Symfony\Component\Uid\Ulid;
 
-class ListEventsTest extends AbstractIntegrationTestCase
+class ListEventsTest extends AbstractBaseTestCase
 {
     /**
      * @var non-empty-string
@@ -39,22 +40,26 @@ class ListEventsTest extends AbstractIntegrationTestCase
         $user1Test2Reference = new ResourceReference('user1test2.yml', md5('user1test2.yml'));
         $user2Test1Reference = new ResourceReference('user2test1.yml', md5('user2test1.yml'));
 
-        self::$client->addEvent(
+        self::$addEventClient->add(
+            self::BASE_URL,
             self::$user1Job->token,
             new Event(1, 'type_1', $user1Test1Reference, [])
         );
 
-        self::$client->addEvent(
+        self::$addEventClient->add(
+            self::BASE_URL,
             self::$user1Job->token,
             new Event(2, 'type_2', $user1Test1Reference, [])
         );
 
-        self::$client->addEvent(
+        self::$addEventClient->add(
+            self::BASE_URL,
             self::$user1Job->token,
             new Event(3, 'type_1', $user1Test2Reference, [])
         );
 
-        self::$client->addEvent(
+        self::$addEventClient->add(
+            self::BASE_URL,
             self::$user2Job->token,
             new Event(1, 'type_1', $user2Test1Reference, [])
         );

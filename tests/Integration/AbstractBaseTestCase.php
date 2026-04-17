@@ -7,6 +7,7 @@ namespace SmartAssert\ResultsClient\Tests\Integration;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
+use SmartAssert\ResultsClient\AddEventClient;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\EventFactory;
 use SmartAssert\ResultsClient\Model\Job;
@@ -19,14 +20,16 @@ use SmartAssert\TestAuthenticationProviderBundle\ApiTokenProvider;
 use SmartAssert\TestAuthenticationProviderBundle\FrontendTokenProvider;
 use Symfony\Component\Uid\Ulid;
 
-abstract class AbstractIntegrationTestCase extends TestCase
+abstract class AbstractBaseTestCase extends TestCase
 {
-    protected const USER1_EMAIL = 'user1@example.com';
-    protected const USER1_PASSWORD = 'password';
-    protected const USER2_EMAIL = 'user2@example.com';
-    protected const USER2_PASSWORD = 'password';
+    protected const string BASE_URL = 'http://localhost:9081';
+    protected const string USER1_EMAIL = 'user1@example.com';
+    protected const string USER1_PASSWORD = 'password';
+    protected const string USER2_EMAIL = 'user2@example.com';
+    protected const string USER2_PASSWORD = 'password';
 
     protected static Client $client;
+    protected static AddEventClient $addEventClient;
 
     /**
      * @var non-empty-string
@@ -41,13 +44,18 @@ abstract class AbstractIntegrationTestCase extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        $serviceClient = self::createServiceClient();
+
         self::$client = new Client(
-            'http://localhost:9081',
-            self::createServiceClient(),
+            self::BASE_URL,
+            $serviceClient,
             new EventFactory(
                 new ResourceReferenceFactory()
             ),
         );
+
+        self::$addEventClient = new AddEventClient($serviceClient);
+
         self::$user1ApiToken = self::createUserApiToken(self::USER1_EMAIL);
         self::$user1JobLabel = (string) new Ulid();
         self::$user1Job = self::$client->createJob(self::$user1ApiToken, self::$user1JobLabel);
