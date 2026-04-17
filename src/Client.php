@@ -37,17 +37,23 @@ readonly class Client implements ClientInterface
         $responseDataInspector = new ArrayInspector($response->getData());
 
         $label = $responseDataInspector->getNonEmptyString('label');
-        $token = $responseDataInspector->getNonEmptyString('token');
         $state = $responseDataInspector->getNonEmptyString('state');
+        $token = $responseDataInspector->getNonEmptyString('token');
+        $eventAddUrl = $responseDataInspector->getNonEmptyString('event_add_url');
 
-        if (null === $label || null === $token || null === $state) {
+        if (null === $label || null === $state) {
             throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
         }
 
+        if (null === $token && null === $eventAddUrl) {
+            throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
+        }
+
+        $authenticator = $token ?? $eventAddUrl;
         $endState = $responseDataInspector->getNonEmptyString('endState');
         $metaState = $this->getJobMetaState($responseDataInspector);
 
-        return new Job($label, $token, new JobState($state, $endState, $metaState));
+        return new Job($label, $authenticator, new JobState($state, $endState, $metaState));
     }
 
     public function getJobStatus(string $token, string $label): JobState

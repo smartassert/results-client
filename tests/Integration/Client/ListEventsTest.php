@@ -42,25 +42,25 @@ class ListEventsTest extends AbstractBaseTestCase
 
         self::$addEventClient->add(
             self::BASE_URL,
-            self::$user1Job->token,
+            self::$user1Job->authenticator,
             new Event(1, 'type_1', $user1Test1Reference, [])
         );
 
         self::$addEventClient->add(
             self::BASE_URL,
-            self::$user1Job->token,
+            self::$user1Job->authenticator,
             new Event(2, 'type_2', $user1Test1Reference, [])
         );
 
         self::$addEventClient->add(
             self::BASE_URL,
-            self::$user1Job->token,
+            self::$user1Job->authenticator,
             new Event(3, 'type_1', $user1Test2Reference, [])
         );
 
         self::$addEventClient->add(
             self::BASE_URL,
-            self::$user2Job->token,
+            self::$user2Job->authenticator,
             new Event(1, 'type_1', $user2Test1Reference, [])
         );
     }
