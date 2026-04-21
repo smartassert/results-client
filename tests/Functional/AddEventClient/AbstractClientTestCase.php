@@ -14,10 +14,10 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\AddEventClient;
+use SmartAssert\ResultsClient\Exception\InvalidAddEventUrlException;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\CommonNonSuccessResponseDataProviderTrait;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\NetworkErrorExceptionDataProviderTrait;
 use SmartAssert\ServiceClient\Client as ServiceClient;
-use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory;
 use SmartAssert\ServiceClient\ResponseFactory\ResponseFactory;
 use webignition\HttpHistoryContainer\Container as HttpHistoryContainer;
@@ -79,9 +79,9 @@ abstract class AbstractClientTestCase extends TestCase
         try {
             ($this->createClientActionCallable())();
 
-            self::fail(NonSuccessResponseException::class . ' not thrown');
-        } catch (NonSuccessResponseException $e) {
-            self::assertSame($httpFixture, $e->getHttpResponse());
+            self::fail(InvalidAddEventUrlException::class . ' not thrown');
+        } catch (InvalidAddEventUrlException $e) {
+            self::assertSame($httpFixture, $e->nonSuccessResponseException->getHttpResponse());
         }
     }
 

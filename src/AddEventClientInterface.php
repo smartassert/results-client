@@ -6,7 +6,7 @@ namespace SmartAssert\ResultsClient;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
-use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
+use SmartAssert\ResultsClient\Exception\InvalidAddEventUrlException;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
 use SmartAssert\ServiceClient\Exception\HttpResponseExceptionInterface;
@@ -19,8 +19,8 @@ interface AddEventClientInterface
      * @throws NetworkExceptionInterface
      * @throws HttpResponseExceptionInterface
      * @throws CurlExceptionInterface
-     * @throws InvalidJobTokenException
+     * @throws InvalidAddEventUrlException
      * @throws UnauthorizedException
      */
-    public function add(string $baseUrl, string $jobToken, EventInterface $event): bool;
+    public function add(string $addEventUrl, EventInterface $event): bool;
 }

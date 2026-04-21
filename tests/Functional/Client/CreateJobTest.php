@@ -16,13 +16,14 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
     public function testCreateJobRequestProperties(): void
     {
         $jobLabel = 'job label';
+        $addEventUrl = 'https://example.com/event/add/' . md5((string) rand());
 
         $this->mockHandler->append(new Response(
             200,
             ['content-type' => 'application/json'],
             (string) json_encode([
                 'label' => $jobLabel,
-                'token' => 'job token',
+                'event_add_url' => $addEventUrl,
                 'state' => 'awaiting-events',
                 'end_state' => null,
             ])
@@ -52,7 +53,7 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
     public static function createApiTokenSuccessDataProvider(): array
     {
         $label = md5((string) rand());
-        $token = md5((string) rand());
+        $addEventUrl = 'https://example.com/event/add/' . md5((string) rand());
 
         return [
             'created' => [
@@ -63,14 +64,14 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
                     ],
                     (string) json_encode([
                         'label' => $label,
-                        'token' => $token,
+                        'event_add_url' => $addEventUrl,
                         'state' => 'awaiting-events',
                         'end_state' => null,
                     ])
                 ),
                 'expected' => new Job(
                     $label,
-                    $token,
+                    $addEventUrl,
                     new JobState(
                         'awaiting-events',
                         null,
