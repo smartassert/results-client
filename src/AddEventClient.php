@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient;
 
-use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
+use SmartAssert\ResultsClient\Exception\InvalidAddEventUrlException;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
@@ -17,22 +17,16 @@ readonly class AddEventClient implements AddEventClientInterface
         private ServiceClient $serviceClient,
     ) {}
 
-    public function add(string $baseUrl, string $jobToken, EventInterface $event): bool
+    public function add(string $addEventUrl, EventInterface $event): bool
     {
-        $url = rtrim($baseUrl, '/') . '/event/add/' . $jobToken;
-
-        $request = new Request('POST', $url)
+        $request = new Request('POST', $addEventUrl)
             ->withPayload(new JsonPayload($event->toArray()))
         ;
 
         try {
             $this->serviceClient->sendRequest($request);
         } catch (NonSuccessResponseException $e) {
-            if (404 === $e->getStatusCode()) {
-                throw new InvalidJobTokenException($jobToken);
-            }
-
-            throw $e;
+            throw new InvalidAddEventUrlException($addEventUrl, $e);
         }
 
         return true;

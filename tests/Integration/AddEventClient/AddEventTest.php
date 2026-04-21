@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\ResultsClient\Tests\Integration\AddEventClient;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use SmartAssert\ResultsClient\Exception\InvalidJobTokenException;
+use SmartAssert\ResultsClient\Exception\InvalidAddEventUrlException;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\ResourceReference;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
@@ -15,30 +15,30 @@ class AddEventTest extends AbstractBaseTestCase
 {
     public function testAddInvalidJobToken(): void
     {
-        $baseUrl = 'http://localhost:9081';
-        $jobToken = 'invalid token';
+        $addEventUrl = 'http://localhost:9081/job/add/invalid token';
+        $exception = null;
 
-        self::expectExceptionObject(new InvalidJobTokenException($jobToken));
+        try {
+            self::$addEventClient->add(
+                $addEventUrl,
+                new Event(
+                    1,
+                    'event_type',
+                    new ResourceReference('event_label', 'event_reference'),
+                    []
+                )
+            );
+        } catch (\Exception $exception) {
+        }
 
-        self::$addEventClient->add(
-            $baseUrl,
-            $jobToken,
-            new Event(
-                1,
-                'event_type',
-                new ResourceReference('event_label', 'event_reference'),
-                []
-            )
-        );
+        self::assertInstanceOf(InvalidAddEventUrlException::class, $exception);
     }
 
     #[DataProvider('addSuccessDataProvider')]
     public function testAddSuccess(Event $event): void
     {
-        $baseUrl = 'http://localhost:9081';
-
         self::assertTrue(
-            self::$addEventClient->add($baseUrl, self::$user1Job->authenticator, $event),
+            self::$addEventClient->add('http://localhost:9081' . self::$user1Job->authenticator, $event),
         );
     }
 

@@ -12,8 +12,6 @@ class AddEventTest extends AbstractClientTestCase
 {
     public function testAddEventRequestProperties(): void
     {
-        $baseUrl = 'https://' . md5((string) rand());
-
         $this->mockHandler->append(new Response(
             200,
             ['content-type' => 'application/json'],
@@ -27,25 +25,23 @@ class AddEventTest extends AbstractClientTestCase
             ])
         ));
 
-        $jobToken = md5((string) rand());
+        $addEventUrl = 'https://' . md5((string) rand()) . '/event/add/' . md5((string) rand());
 
         $this->client->add(
-            $baseUrl,
-            $jobToken,
+            $addEventUrl,
             new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
         );
 
         $request = $this->getLastRequest();
         self::assertSame('POST', $request->getMethod());
-        self::assertSame($baseUrl . '/event/add/' . $jobToken, $request->getUri()->__toString());
+        self::assertSame($addEventUrl, $request->getUri()->__toString());
     }
 
     protected function createClientActionCallable(): callable
     {
         return function () {
             $this->client->add(
-                'https://' . md5((string) rand()),
-                'job token',
+                'https://' . md5((string) rand()) . '/event/add/' . md5((string) rand()),
                 new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
             );
         };
