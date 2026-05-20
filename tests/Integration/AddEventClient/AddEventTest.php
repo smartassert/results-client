@@ -15,7 +15,7 @@ class AddEventTest extends AbstractBaseTestCase
 {
     public function testAddInvalidJobToken(): void
     {
-        $addEventUrl = 'http://localhost:9081/job/add/invalid token';
+        $addEventUrl = 'http://localhost:9081/job/add/invalid_token';
         $exception = null;
 
         try {
@@ -38,7 +38,7 @@ class AddEventTest extends AbstractBaseTestCase
     public function testAddSuccess(Event $event): void
     {
         self::assertTrue(
-            self::$addEventClient->add('http://localhost:9081' . self::$user1Job->authenticator, $event),
+            self::$addEventClient->add(self::$user1Job->authenticator, $event),
         );
     }
 
