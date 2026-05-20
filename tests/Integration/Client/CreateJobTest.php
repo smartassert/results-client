@@ -18,7 +18,11 @@ class CreateJobTest extends AbstractBaseTestCase
 
         self::assertSame($jobLabel, $job->label);
         self::assertEquals(
-            new JobState('awaiting-events', null, new MetaState(false, false)),
+            new JobState(
+                'awaiting-events',
+                null,
+                new MetaState(ended: false, succeeded: false, pending: true)
+            ),
             $job->state
         );
     }
