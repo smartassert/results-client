@@ -22,11 +22,11 @@ use Symfony\Component\Uid\Ulid;
 
 abstract class AbstractBaseTestCase extends TestCase
 {
-    protected const string BASE_URL = 'http://localhost:9081';
     protected const string USER1_EMAIL = 'user1@example.com';
     protected const string USER1_PASSWORD = 'password';
     protected const string USER2_EMAIL = 'user2@example.com';
     protected const string USER2_PASSWORD = 'password';
+    private const string BASE_URL = 'http://localhost:9081';
 
     protected static Client $client;
     protected static AddEventClient $addEventClient;
