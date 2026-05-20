@@ -49,7 +49,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
     public static function getJobStatusSuccessDataProvider(): array
     {
         return [
-            'state=started, no end_state' => [
+            'state=started, no end_state, no pending meta state' => [
                 'httpFixture' => new Response(
                     200,
                     [
@@ -63,7 +63,32 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         ],
                     ])
                 ),
-                'expected' => new JobState('started', null, new MetaState(false, false)),
+                'expected' => new JobState(
+                    'started',
+                    null,
+                    new MetaState(ended: false, succeeded: false, pending: true),
+                ),
+            ],
+            'state=started, no end_state' => [
+                'httpFixture' => new Response(
+                    200,
+                    [
+                        'content-type' => 'application/json',
+                    ],
+                    (string) json_encode([
+                        'state' => 'started',
+                        'meta_state' => [
+                            'ended' => false,
+                            'succeeded' => false,
+                            'pending' => true,
+                        ],
+                    ])
+                ),
+                'expected' => new JobState(
+                    'started',
+                    null,
+                    new MetaState(ended: false, succeeded: false, pending: true),
+                ),
             ],
             'state=complete,end_state=ended' => [
                 'httpFixture' => new Response(
@@ -77,10 +102,15 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'meta_state' => [
                             'ended' => true,
                             'succeeded' => true,
+                            'pending' => false,
                         ],
                     ])
                 ),
-                'expected' => new JobState('complete', 'ended', new MetaState(true, true)),
+                'expected' => new JobState(
+                    'complete',
+                    'ended',
+                    new MetaState(ended: true, succeeded: true, pending: false)
+                ),
             ],
         ];
     }

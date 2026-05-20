@@ -113,6 +113,7 @@ readonly class Client implements ClientInterface
         return new MetaState(
             $metaStateInspector->getBoolean('ended') ?? false,
             $metaStateInspector->getBoolean('succeeded') ?? false,
+            $metaStateInspector->getBoolean('pending') ?? true,
         );
     }
 
