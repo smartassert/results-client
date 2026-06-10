@@ -7,6 +7,7 @@ namespace SmartAssert\ResultsClient\Tests\Functional\Client;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
+use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\JobState;
 use SmartAssert\ResultsClient\Model\MetaState;
 
@@ -15,13 +16,16 @@ class GetJobTest extends AbstractClientModelCreationTestCase
     public function testGetJobStatusRequestProperties(): void
     {
         $jobLabel = 'job label';
+        $addEventUrl = 'https://example.com/event/add/' . md5((string) rand());
 
         $this->mockHandler->append(new Response(
             200,
             ['content-type' => 'application/json'],
             (string) json_encode([
-                'state' => 'ended',
-                'token' => 'complete',
+                'label' => $jobLabel,
+                'event_add_url' => $addEventUrl,
+                'state' => 'awaiting-events',
+                'end_state' => null,
             ])
         ));
 
@@ -35,7 +39,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
     }
 
     #[DataProvider('getJobStatusSuccessDataProvider')]
-    public function testGetJobStatusSuccess(ResponseInterface $httpFixture, JobState $expected): void
+    public function testGetJobStatusSuccess(ResponseInterface $httpFixture, Job $expected): void
     {
         $this->mockHandler->append($httpFixture);
 
@@ -48,6 +52,8 @@ class GetJobTest extends AbstractClientModelCreationTestCase
      */
     public static function getJobStatusSuccessDataProvider(): array
     {
+        $addEventUrl = 'https://example.com/event/add/' . md5((string) rand());
+
         return [
             'state=started, no end_state, no pending meta state' => [
                 'httpFixture' => new Response(
@@ -56,6 +62,8 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'content-type' => 'application/json',
                     ],
                     (string) json_encode([
+                        'label' => 'label',
+                        'event_add_url' => $addEventUrl,
                         'state' => 'started',
                         'meta_state' => [
                             'ended' => false,
@@ -63,10 +71,14 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         ],
                     ])
                 ),
-                'expected' => new JobState(
-                    'started',
-                    null,
-                    new MetaState(ended: false, succeeded: false, pending: true),
+                'expected' => new Job(
+                    'label',
+                    $addEventUrl,
+                    new JobState(
+                        'started',
+                        null,
+                        new MetaState(ended: false, succeeded: false, pending: true),
+                    )
                 ),
             ],
             'state=started, no end_state' => [
@@ -76,6 +88,8 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'content-type' => 'application/json',
                     ],
                     (string) json_encode([
+                        'label' => 'label',
+                        'event_add_url' => $addEventUrl,
                         'state' => 'started',
                         'meta_state' => [
                             'ended' => false,
@@ -84,10 +98,14 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         ],
                     ])
                 ),
-                'expected' => new JobState(
-                    'started',
-                    null,
-                    new MetaState(ended: false, succeeded: false, pending: true),
+                'expected' => new Job(
+                    'label',
+                    $addEventUrl,
+                    new JobState(
+                        'started',
+                        null,
+                        new MetaState(ended: false, succeeded: false, pending: true),
+                    )
                 ),
             ],
             'state=complete,end_state=ended' => [
@@ -97,6 +115,8 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'content-type' => 'application/json',
                     ],
                     (string) json_encode([
+                        'label' => 'label',
+                        'event_add_url' => $addEventUrl,
                         'state' => 'complete',
                         'end_state' => 'ended',
                         'meta_state' => [
@@ -106,10 +126,14 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         ],
                     ])
                 ),
-                'expected' => new JobState(
-                    'complete',
-                    'ended',
-                    new MetaState(ended: true, succeeded: true, pending: false)
+                'expected' => new Job(
+                    'label',
+                    $addEventUrl,
+                    new JobState(
+                        'complete',
+                        'ended',
+                        new MetaState(ended: true, succeeded: true, pending: false)
+                    )
                 ),
             ],
         ];
@@ -124,6 +148,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
 
     protected function getExpectedModelClass(): string
     {
-        return JobState::class;
+        return Job::class;
     }
 }

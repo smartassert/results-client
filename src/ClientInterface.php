@@ -8,7 +8,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
-use SmartAssert\ResultsClient\Model\JobState;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
 use SmartAssert\ServiceClient\Exception\HttpResponseExceptionInterface;
 use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
@@ -46,7 +45,7 @@ interface ClientInterface
      * @throws InvalidResponseTypeException
      * @throws UnauthorizedException
      */
-    public function getJobStatus(string $token, string $label): JobState;
+    public function getJobStatus(string $token, string $label): Job;
 
     /**
      * @param non-empty-string      $token
