@@ -16,6 +16,7 @@ use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
 use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
+use SmartAssert\ServiceClient\Exception\InvalidResponseDataException;
 use SmartAssert\ServiceClient\Exception\InvalidResponseTypeException;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\Exception\UnauthorizedException;
@@ -34,37 +35,14 @@ readonly class Client implements ClientInterface
     {
         $response = $this->makeJobRequest('POST', $token, $label);
 
-        $responseDataInspector = new ArrayInspector($response->getData());
-
-        $label = $responseDataInspector->getNonEmptyString('label');
-        $state = $responseDataInspector->getNonEmptyString('state');
-        $eventAddUrl = $responseDataInspector->getNonEmptyString('event_add_url');
-
-        if (null === $label || null === $state || null === $eventAddUrl) {
-            throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
-        }
-
-        $endState = $responseDataInspector->getNonEmptyString('endState');
-        $metaState = $this->getJobMetaState($responseDataInspector);
-
-        return new Job($label, $eventAddUrl, new JobState($state, $endState, $metaState));
+        return $this->createJobModel($response);
     }
 
-    public function getJobStatus(string $token, string $label): JobState
+    public function getJobStatus(string $token, string $label): Job
     {
         $response = $this->makeJobRequest('GET', $token, $label);
 
-        $responseDataInspector = new ArrayInspector($response->getData());
-
-        $state = $responseDataInspector->getNonEmptyString('state');
-        if (null === $state) {
-            throw InvalidModelDataException::fromJsonResponse(JobState::class, $response);
-        }
-
-        $endState = $responseDataInspector->getNonEmptyString('end_state');
-        $metaState = $this->getJobMetaState($responseDataInspector);
-
-        return new JobState($state, $endState, $metaState);
+        return $this->createJobModel($response);
     }
 
     public function listEvents(string $token, string $jobLabel, ?string $reference, ?string $type): array
@@ -102,6 +80,28 @@ readonly class Client implements ClientInterface
         });
 
         return $events;
+    }
+
+    /**
+     * @throws InvalidModelDataException
+     * @throws InvalidResponseDataException
+     */
+    private function createJobModel(JsonResponse $response): Job
+    {
+        $responseDataInspector = new ArrayInspector($response->getData());
+
+        $label = $responseDataInspector->getNonEmptyString('label');
+        $state = $responseDataInspector->getNonEmptyString('state');
+        $eventAddUrl = $responseDataInspector->getNonEmptyString('event_add_url');
+
+        if (null === $label || null === $state || null === $eventAddUrl) {
+            throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
+        }
+
+        $endState = $responseDataInspector->getNonEmptyString('end_state');
+        $metaState = $this->getJobMetaState($responseDataInspector);
+
+        return new Job($label, $eventAddUrl, new JobState($state, $endState, $metaState));
     }
 
     private function getJobMetaState(ArrayInspector $inspector): MetaState
