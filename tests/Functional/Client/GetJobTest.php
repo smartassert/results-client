@@ -26,6 +26,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 'event_add_url' => $addEventUrl,
                 'state' => 'awaiting-events',
                 'end_state' => null,
+                'has_events' => false,
             ])
         ));
 
@@ -69,6 +70,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                             'ended' => false,
                             'succeeded' => false,
                         ],
+                        'has_events' => false,
                     ])
                 ),
                 'expected' => new Job(
@@ -97,6 +99,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                             'succeeded' => false,
                             'pending' => true,
                         ],
+                        'has_events' => true,
                     ])
                 ),
                 'expected' => new Job(
@@ -107,7 +110,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         null,
                         new MetaState(ended: false, succeeded: false, pending: true),
                     ),
-                    false,
+                    true,
                 ),
             ],
             'state=complete,end_state=ended' => [
@@ -126,6 +129,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                             'succeeded' => true,
                             'pending' => false,
                         ],
+                        'has_events' => true,
                     ])
                 ),
                 'expected' => new Job(
@@ -136,7 +140,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'ended',
                         new MetaState(ended: true, succeeded: true, pending: false)
                     ),
-                    false,
+                    true,
                 ),
             ],
         ];

@@ -26,6 +26,7 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
                 'event_add_url' => $addEventUrl,
                 'state' => 'awaiting-events',
                 'end_state' => null,
+                'has_events' => false,
             ])
         ));
 
@@ -67,6 +68,7 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
                         'event_add_url' => $addEventUrl,
                         'state' => 'awaiting-events',
                         'end_state' => null,
+                        'has_events' => false,
                     ])
                 ),
                 'expected' => new Job(

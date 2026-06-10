@@ -93,14 +93,14 @@ readonly class Client implements ClientInterface
         $label = $responseDataInspector->getNonEmptyString('label');
         $state = $responseDataInspector->getNonEmptyString('state');
         $eventAddUrl = $responseDataInspector->getNonEmptyString('event_add_url');
+        $hasEvents = $responseDataInspector->getBoolean('has_events');
 
-        if (null === $label || null === $state || null === $eventAddUrl) {
+        if (null === $label || null === $state || null === $eventAddUrl || null === $hasEvents) {
             throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
         }
 
         $endState = $responseDataInspector->getNonEmptyString('end_state');
         $metaState = $this->getJobMetaState($responseDataInspector);
-        $hasEvents = $responseDataInspector->getBoolean('has_events');
 
         return new Job($label, $eventAddUrl, new JobState($state, $endState, $metaState), $hasEvents);
     }
