@@ -76,7 +76,8 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
                         'awaiting-events',
                         null,
                         new MetaState(ended: false, succeeded: false, pending: true)
-                    )
+                    ),
+                    false,
                 ),
             ],
         ];

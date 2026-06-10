@@ -78,7 +78,8 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'started',
                         null,
                         new MetaState(ended: false, succeeded: false, pending: true),
-                    )
+                    ),
+                    false,
                 ),
             ],
             'state=started, no end_state' => [
@@ -105,7 +106,8 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'started',
                         null,
                         new MetaState(ended: false, succeeded: false, pending: true),
-                    )
+                    ),
+                    false,
                 ),
             ],
             'state=complete,end_state=ended' => [
@@ -133,7 +135,8 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'complete',
                         'ended',
                         new MetaState(ended: true, succeeded: true, pending: false)
-                    )
+                    ),
+                    false,
                 ),
             ],
         ];

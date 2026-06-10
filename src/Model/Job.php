@@ -14,5 +14,6 @@ readonly class Job
         public string $label,
         public string $authenticator,
         public JobState $state,
+        public ?bool $hasEvents,
     ) {}
 }
