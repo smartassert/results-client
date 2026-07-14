@@ -20,6 +20,7 @@ use SmartAssert\ServiceClient\Exception\InvalidResponseDataException;
 use SmartAssert\ServiceClient\Exception\InvalidResponseTypeException;
 use SmartAssert\ServiceClient\Exception\NonSuccessResponseException;
 use SmartAssert\ServiceClient\Exception\UnauthorizedException;
+use SmartAssert\ServiceClient\Payload\UrlEncodedPayload;
 use SmartAssert\ServiceClient\Request;
 use SmartAssert\ServiceClient\Response\JsonResponse;
 
@@ -31,16 +32,16 @@ readonly class Client implements ClientInterface
         private EventFactory $eventFactory,
     ) {}
 
-    public function createJob(string $token, string $label): Job
+    public function createJob(string $token, string $label, ?string $notifyUrl): Job
     {
-        $response = $this->makeJobRequest('POST', $token, $label);
+        $response = $this->makeJobCreationRequest($token, $label, $notifyUrl);
 
         return $this->createJobModel($response);
     }
 
     public function getJobStatus(string $token, string $label): Job
     {
-        $response = $this->makeJobRequest('GET', $token, $label);
+        $response = $this->makeJobRetrievalRequest($token, $label);
 
         return $this->createJobModel($response);
     }
@@ -121,7 +122,36 @@ readonly class Client implements ClientInterface
     }
 
     /**
-     * @param non-empty-string $method
+     * @param non-empty-string  $token
+     * @param non-empty-string  $label
+     * @param ?non-empty-string $notifyUrl
+     *
+     * @throws CurlExceptionInterface
+     * @throws NetworkExceptionInterface
+     * @throws RequestExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws NonSuccessResponseException
+     * @throws InvalidResponseTypeException
+     * @throws UnauthorizedException
+     */
+    private function makeJobCreationRequest(string $token, string $label, ?string $notifyUrl): JsonResponse
+    {
+        $request = new Request('POST', $this->createUrl('/job/' . $label))
+            ->withAuthentication(new BearerAuthentication($token))
+        ;
+
+        if (is_string($notifyUrl)) {
+            $request = $request->withPayload(
+                new UrlEncodedPayload([
+                    'notify_url' => $notifyUrl,
+                ])
+            );
+        }
+
+        return $this->serviceClient->sendRequestForJson($request);
+    }
+
+    /**
      * @param non-empty-string $token
      * @param non-empty-string $label
      *
@@ -133,10 +163,10 @@ readonly class Client implements ClientInterface
      * @throws InvalidResponseTypeException
      * @throws UnauthorizedException
      */
-    private function makeJobRequest(string $method, string $token, string $label): JsonResponse
+    private function makeJobRetrievalRequest(string $token, string $label): JsonResponse
     {
         return $this->serviceClient->sendRequestForJson(
-            (new Request($method, $this->createUrl('/job/' . $label)))
+            new Request('GET', $this->createUrl('/job/' . $label))
                 ->withAuthentication(new BearerAuthentication($token))
         );
     }

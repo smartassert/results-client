@@ -14,7 +14,7 @@ class CreateJobTest extends AbstractBaseTestCase
     public function testCreateJob(): void
     {
         $jobLabel = (string) new Ulid();
-        $job = self::$client->createJob(self::$user1ApiToken, $jobLabel);
+        $job = self::$client->createJob(self::$user1ApiToken, $jobLabel, null);
 
         self::assertSame($jobLabel, $job->label);
         self::assertEquals(

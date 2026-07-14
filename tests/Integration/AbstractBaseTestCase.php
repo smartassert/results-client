@@ -58,7 +58,7 @@ abstract class AbstractBaseTestCase extends TestCase
 
         self::$user1ApiToken = self::createUserApiToken(self::USER1_EMAIL);
         self::$user1JobLabel = (string) new Ulid();
-        self::$user1Job = self::$client->createJob(self::$user1ApiToken, self::$user1JobLabel);
+        self::$user1Job = self::$client->createJob(self::$user1ApiToken, self::$user1JobLabel, null);
     }
 
     /**

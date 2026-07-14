@@ -34,7 +34,7 @@ class ListEventsTest extends AbstractBaseTestCase
         $user2JobLabel = (string) new Ulid();
         self::$user2JobLabel = $user2JobLabel;
 
-        self::$user2Job = self::$client->createJob(self::$user2ApiToken, self::$user2JobLabel);
+        self::$user2Job = self::$client->createJob(self::$user2ApiToken, self::$user2JobLabel, null);
 
         $user1Test1Reference = new ResourceReference('user1test1.yml', md5('user1test1.yml'));
         $user1Test2Reference = new ResourceReference('user1test2.yml', md5('user1test2.yml'));

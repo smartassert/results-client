@@ -13,9 +13,20 @@ use SmartAssert\ResultsClient\Model\MetaState;
 
 class CreateJobTest extends AbstractClientModelCreationTestCase
 {
-    public function testCreateJobRequestProperties(): void
-    {
-        $jobLabel = 'job label';
+    /**
+     * @param non-empty-string  $apiKey
+     * @param non-empty-string  $jobLabel
+     * @param ?non-empty-string $notifyUrl
+     * @param array<mixed>      $expectedRequestHeaders
+     */
+    #[DataProvider('createJobRequestPropertiesDataProvider')]
+    public function testCreateJobRequestProperties(
+        string $apiKey,
+        string $jobLabel,
+        ?string $notifyUrl,
+        array $expectedRequestHeaders,
+        string $expectedRequestBody
+    ): void {
         $addEventUrl = 'https://example.com/event/add/' . md5((string) rand());
 
         $this->mockHandler->append(new Response(
@@ -30,13 +41,45 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
             ])
         ));
 
-        $apiKey = 'api key value';
-
-        $this->client->createJob($apiKey, $jobLabel);
+        $this->client->createJob($apiKey, $jobLabel, $notifyUrl);
 
         $request = $this->getLastRequest();
         self::assertSame('POST', $request->getMethod());
         self::assertSame('Bearer ' . $apiKey, $request->getHeaderLine('authorization'));
+
+        $requestHeaders = $request->getHeaders();
+        unset($requestHeaders['Host'], $requestHeaders['User-Agent'], $requestHeaders['Content-Length']);
+
+        self::assertEquals($expectedRequestHeaders, $requestHeaders);
+        self::assertSame($expectedRequestBody, (string) $request->getBody());
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public static function createJobRequestPropertiesDataProvider(): array
+    {
+        return [
+            'without notify url' => [
+                'apiKey' => 'api key value',
+                'jobLabel' => 'job label',
+                'notifyUrl' => null,
+                'expectedRequestHeaders' => [
+                    'Authorization' => ['Bearer api key value'],
+                ],
+                'expectedRequestBody' => '',
+            ],
+            'with notify url' => [
+                'apiKey' => 'api key value',
+                'jobLabel' => 'job label',
+                'notifyUrl' => 'https://example.com/notify',
+                'expectedRequestHeaders' => [
+                    'Authorization' => ['Bearer api key value'],
+                    'Content-Type' => ['application/x-www-form-urlencoded'],
+                ],
+                'expectedRequestBody' => http_build_query(['notify_url' => 'https://example.com/notify']),
+            ],
+        ];
     }
 
     #[DataProvider('createApiTokenSuccessDataProvider')]
@@ -44,7 +87,7 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
     {
         $this->mockHandler->append($httpFixture);
 
-        $actual = $this->client->createJob('api key', 'label');
+        $actual = $this->client->createJob('api key', 'label', null);
         self::assertEquals($expected, $actual);
     }
 
@@ -89,7 +132,7 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
     protected function createClientActionCallable(): callable
     {
         return function () {
-            $this->client->createJob('api token', 'label');
+            $this->client->createJob('api token', 'label', null);
         };
     }
 
