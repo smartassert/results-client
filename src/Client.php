@@ -102,7 +102,9 @@ readonly class Client implements ClientInterface
         $endState = $responseDataInspector->getNonEmptyString('end_state');
         $metaState = $this->getJobMetaState($responseDataInspector);
 
-        return new Job($label, $eventAddUrl, new JobState($state, $endState, $metaState), $hasEvents);
+        $previousStates = $responseDataInspector->getNonEmptyStringArray('previous_states');
+
+        return new Job($label, $eventAddUrl, new JobState($state, $endState, $metaState), $hasEvents, $previousStates);
     }
 
     private function getJobMetaState(ArrayInspector $inspector): MetaState
