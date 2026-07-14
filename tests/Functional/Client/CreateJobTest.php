@@ -80,6 +80,7 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
                         new MetaState(ended: false, succeeded: false, pending: true)
                     ),
                     false,
+                    [],
                 ),
             ],
         ];

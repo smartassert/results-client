@@ -56,7 +56,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
         $addEventUrl = 'https://example.com/event/add/' . md5((string) rand());
 
         return [
-            'state=started, no end_state, no pending meta state' => [
+            'state=started, no end_state, no pending meta state, previous states not present' => [
                 'httpFixture' => new Response(
                     200,
                     [
@@ -82,6 +82,75 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         new MetaState(ended: false, succeeded: false, pending: true),
                     ),
                     false,
+                    [],
+                ),
+            ],
+            'state=started, no end_state, no pending meta state, no previous states' => [
+                'httpFixture' => new Response(
+                    200,
+                    [
+                        'content-type' => 'application/json',
+                    ],
+                    (string) json_encode([
+                        'label' => 'label',
+                        'event_add_url' => $addEventUrl,
+                        'state' => 'started',
+                        'meta_state' => [
+                            'ended' => false,
+                            'succeeded' => false,
+                        ],
+                        'has_events' => false,
+                        'previous_states' => [],
+                    ])
+                ),
+                'expected' => new Job(
+                    'label',
+                    $addEventUrl,
+                    new JobState(
+                        'started',
+                        null,
+                        new MetaState(ended: false, succeeded: false, pending: true),
+                    ),
+                    false,
+                    [],
+                ),
+            ],
+            'state=started, no end_state, no pending meta state, has previous states' => [
+                'httpFixture' => new Response(
+                    200,
+                    [
+                        'content-type' => 'application/json',
+                    ],
+                    (string) json_encode([
+                        'label' => 'label',
+                        'event_add_url' => $addEventUrl,
+                        'state' => 'started',
+                        'meta_state' => [
+                            'ended' => false,
+                            'succeeded' => false,
+                        ],
+                        'has_events' => false,
+                        'previous_states' => [
+                            'previous_state_1',
+                            'previous_state_2',
+                            'previous_state_3',
+                        ],
+                    ])
+                ),
+                'expected' => new Job(
+                    'label',
+                    $addEventUrl,
+                    new JobState(
+                        'started',
+                        null,
+                        new MetaState(ended: false, succeeded: false, pending: true),
+                    ),
+                    false,
+                    [
+                        'previous_state_1',
+                        'previous_state_2',
+                        'previous_state_3',
+                    ],
                 ),
             ],
             'state=started, no end_state' => [
@@ -111,6 +180,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         new MetaState(ended: false, succeeded: false, pending: true),
                     ),
                     true,
+                    [],
                 ),
             ],
             'state=complete,end_state=ended' => [
@@ -141,6 +211,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         new MetaState(ended: true, succeeded: true, pending: false)
                     ),
                     true,
+                    [],
                 ),
             ],
         ];
