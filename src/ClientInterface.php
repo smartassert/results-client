@@ -18,8 +18,9 @@ use SmartAssert\ServiceClient\Exception\UnauthorizedException;
 interface ClientInterface
 {
     /**
-     * @param non-empty-string $token
-     * @param non-empty-string $label
+     * @param non-empty-string  $token
+     * @param non-empty-string  $label
+     * @param ?non-empty-string $notifyUrl
      *
      * @throws ClientExceptionInterface
      * @throws NetworkExceptionInterface
@@ -30,7 +31,7 @@ interface ClientInterface
      * @throws InvalidResponseTypeException
      * @throws UnauthorizedException
      */
-    public function createJob(string $token, string $label): Job;
+    public function createJob(string $token, string $label, ?string $notifyUrl): Job;
 
     /**
      * @param non-empty-string $token

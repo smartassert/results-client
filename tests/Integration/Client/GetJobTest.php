@@ -14,7 +14,7 @@ class GetJobTest extends AbstractBaseTestCase
     public function testGetJobStatus(): void
     {
         $jobLabel = (string) new Ulid();
-        self::$client->createJob(self::$user1ApiToken, $jobLabel);
+        self::$client->createJob(self::$user1ApiToken, $jobLabel, null);
 
         $job = self::$client->getJobStatus(self::$user1ApiToken, $jobLabel);
 
