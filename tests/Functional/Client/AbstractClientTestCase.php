@@ -15,6 +15,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\EventFactory;
+use SmartAssert\ResultsClient\JobFactory;
 use SmartAssert\ResultsClient\ResourceReferenceFactory;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\CommonNonSuccessResponseDataProviderTrait;
 use SmartAssert\ResultsClient\Tests\Functional\DataProvider\InvalidJsonResponseExceptionDataProviderTrait;
@@ -60,7 +61,8 @@ abstract class AbstractClientTestCase extends TestCase
             ),
             new EventFactory(
                 new ResourceReferenceFactory()
-            )
+            ),
+            new JobFactory(),
         );
     }
 
