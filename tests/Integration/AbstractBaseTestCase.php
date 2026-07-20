@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\ResultsClient\AddEventClient;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\EventFactory;
+use SmartAssert\ResultsClient\JobFactory;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\ResourceReferenceFactory;
 use SmartAssert\ServiceClient\Client as ServiceClient;
@@ -52,6 +53,7 @@ abstract class AbstractBaseTestCase extends TestCase
             new EventFactory(
                 new ResourceReferenceFactory()
             ),
+            new JobFactory(),
         );
 
         self::$addEventClient = new AddEventClient($serviceClient);

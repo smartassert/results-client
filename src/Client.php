@@ -10,8 +10,6 @@ use Psr\Http\Client\RequestExceptionInterface;
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
-use SmartAssert\ResultsClient\Model\JobState;
-use SmartAssert\ResultsClient\Model\MetaState;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
@@ -30,6 +28,7 @@ readonly class Client implements ClientInterface
         private string $baseUrl,
         private ServiceClient $serviceClient,
         private EventFactory $eventFactory,
+        private JobFactory $jobFactory,
     ) {}
 
     public function createJob(string $token, string $label, ?string $notifyUrl): Job
@@ -89,36 +88,12 @@ readonly class Client implements ClientInterface
      */
     private function createJobModel(JsonResponse $response): Job
     {
-        $responseDataInspector = new ArrayInspector($response->getData());
-
-        $label = $responseDataInspector->getNonEmptyString('label');
-        $state = $responseDataInspector->getNonEmptyString('state');
-        $eventAddUrl = $responseDataInspector->getNonEmptyString('event_add_url');
-        $hasEvents = $responseDataInspector->getBoolean('has_events');
-
-        if (null === $label || null === $state || null === $eventAddUrl || null === $hasEvents) {
+        $job = $this->jobFactory->create($response->getData());
+        if (null === $job) {
             throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
         }
 
-        $endState = $responseDataInspector->getNonEmptyString('end_state');
-        $metaState = $this->getJobMetaState($responseDataInspector);
-
-        $previousStates = $responseDataInspector->getNonEmptyStringArray('previous_states');
-
-        return new Job($label, $eventAddUrl, new JobState($state, $endState, $metaState), $hasEvents, $previousStates);
-    }
-
-    private function getJobMetaState(ArrayInspector $inspector): MetaState
-    {
-        $metaStateInspector = new ArrayInspector(
-            $inspector->getArray('meta_state')
-        );
-
-        return new MetaState(
-            $metaStateInspector->getBoolean('ended') ?? false,
-            $metaStateInspector->getBoolean('succeeded') ?? false,
-            $metaStateInspector->getBoolean('pending') ?? true,
-        );
+        return $job;
     }
 
     /**
