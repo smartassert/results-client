@@ -22,6 +22,7 @@ class AddEventTest extends AbstractBaseTestCase
             self::$addEventClient->add(
                 $addEventUrl,
                 new Event(
+                    'job label',
                     1,
                     'event_type',
                     new ResourceReference('event_label', 'event_reference'),
@@ -50,6 +51,7 @@ class AddEventTest extends AbstractBaseTestCase
         return [
             'without related references, empty body' => [
                 'event' => new Event(
+                    'job label',
                     1,
                     'event_type',
                     new ResourceReference('event_label_1', 'event_reference_1'),
@@ -58,6 +60,7 @@ class AddEventTest extends AbstractBaseTestCase
             ],
             'without related references, non-empty body' => [
                 'event' => new Event(
+                    'job label',
                     2,
                     'event_type',
                     new ResourceReference('event_label_2', 'event_reference_2'),
@@ -69,6 +72,7 @@ class AddEventTest extends AbstractBaseTestCase
             ],
             'with single related reference, empty body' => [
                 'event' => new Event(
+                    'job label',
                     3,
                     'event_type',
                     new ResourceReference('event_label_3', 'event_reference_3'),
@@ -81,6 +85,7 @@ class AddEventTest extends AbstractBaseTestCase
             ],
             'with multiple related references, non-empty body' => [
                 'event' => new Event(
+                    'job label',
                     4,
                     'event_type',
                     new ResourceReference('event_label_4', 'event_reference_4'),

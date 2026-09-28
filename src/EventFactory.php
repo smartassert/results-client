@@ -7,7 +7,6 @@ namespace SmartAssert\ResultsClient;
 use SmartAssert\ArrayInspector\ArrayInspector;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
-use SmartAssert\ResultsClient\Model\JobEventInterface;
 use SmartAssert\ResultsClient\Model\ResourceReferenceCollection;
 use SmartAssert\ResultsClient\Model\ResourceReferenceInterface;
 
@@ -19,6 +18,7 @@ readonly class EventFactory
 
     public function create(ArrayInspector $data): ?EventInterface
     {
+        $job = $data->getNonEmptyString('job');
         $sequenceNumber = $data->getPositiveInteger('sequence_number');
         $type = $data->getNonEmptyString('type');
         $resourceReference = $this->resourceReferenceFactory->create($data);
@@ -36,19 +36,13 @@ readonly class EventFactory
             }
         }
 
-        if (null === $sequenceNumber || null === $type || null === $resourceReference) {
+        if (null === $job || null === $sequenceNumber || null === $type || null === $resourceReference) {
             return null;
         }
 
-        $event = new Event($sequenceNumber, $type, $resourceReference, $body);
-
+        $event = new Event($job, $sequenceNumber, $type, $resourceReference, $body);
         if ([] !== $references) {
             $event = $event->withRelatedReferences(new ResourceReferenceCollection($references));
-        }
-
-        $job = $data->getNonEmptyString('job');
-        if (null !== $job && $event instanceof JobEventInterface) {
-            $event = $event->withJob($job);
         }
 
         return $event;
