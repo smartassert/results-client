@@ -40,11 +40,11 @@ readonly class EventFactory
             return null;
         }
 
-        $event = new Event($job, $sequenceNumber, $type, $resourceReference, $body);
+        $relatedReferences = null;
         if ([] !== $references) {
-            $event = $event->withRelatedReferences(new ResourceReferenceCollection($references));
+            $relatedReferences = new ResourceReferenceCollection($references);
         }
 
-        return $event;
+        return new Event($job, $sequenceNumber, $type, $resourceReference, $body, $relatedReferences);
     }
 }

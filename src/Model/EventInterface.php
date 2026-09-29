@@ -21,6 +21,4 @@ interface EventInterface
      * @return SerializedEvent
      */
     public function toArray(): array;
-
-    public function withRelatedReferences(ResourceReferenceCollectionInterface $relatedReferences): EventInterface;
 }
