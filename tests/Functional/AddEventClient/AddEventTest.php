@@ -29,7 +29,7 @@ class AddEventTest extends AbstractClientTestCase
 
         $this->client->add(
             $addEventUrl,
-            new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
+            new Event('job label content', 1, 'job/started', new ResourceReference('label', 'reference'), [])
         );
 
         $request = $this->getLastRequest();
@@ -42,7 +42,7 @@ class AddEventTest extends AbstractClientTestCase
         return function () {
             $this->client->add(
                 'https://' . md5((string) rand()) . '/event/add/' . md5((string) rand()),
-                new Event(1, 'job/started', new ResourceReference('label', 'reference'), [])
+                new Event('job label', 1, 'job/started', new ResourceReference('label', 'reference'), [])
             );
         };
     }

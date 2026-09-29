@@ -42,22 +42,22 @@ class ListEventsTest extends AbstractBaseTestCase
 
         self::$addEventClient->add(
             self::$user1Job->authenticator,
-            new Event(1, 'type_1', $user1Test1Reference, [])
+            new Event(self::$user1JobLabel, 1, 'type_1', $user1Test1Reference, [])
         );
 
         self::$addEventClient->add(
             self::$user1Job->authenticator,
-            new Event(2, 'type_2', $user1Test1Reference, [])
+            new Event(self::$user1JobLabel, 2, 'type_2', $user1Test1Reference, [])
         );
 
         self::$addEventClient->add(
             self::$user1Job->authenticator,
-            new Event(3, 'type_1', $user1Test2Reference, [])
+            new Event(self::$user1JobLabel, 3, 'type_1', $user1Test2Reference, [])
         );
 
         self::$addEventClient->add(
             self::$user2Job->authenticator,
-            new Event(1, 'type_1', $user2Test1Reference, [])
+            new Event(self::$user2JobLabel, 1, 'type_1', $user2Test1Reference, [])
         );
     }
 
@@ -140,12 +140,13 @@ class ListEventsTest extends AbstractBaseTestCase
                 'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
-                        (new Event(
+                        new Event(
+                            self::$user1JobLabel,
                             3,
                             'type_1',
                             new ResourceReference('user1test2.yml', md5('user1test2.yml')),
                             [],
-                        ))->withJob(self::$user1JobLabel),
+                        ),
                     ];
                 },
             ],
@@ -160,12 +161,13 @@ class ListEventsTest extends AbstractBaseTestCase
                 'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
-                        (new Event(
+                        new Event(
+                            self::$user2JobLabel,
                             1,
                             'type_1',
                             new ResourceReference('user2test1.yml', md5('user2test1.yml')),
                             [],
-                        ))->withJob(self::$user2JobLabel),
+                        ),
                     ];
                 },
             ],
@@ -180,18 +182,20 @@ class ListEventsTest extends AbstractBaseTestCase
                 'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
-                        (new Event(
+                        new Event(
+                            self::$user1JobLabel,
                             1,
                             'type_1',
                             new ResourceReference('user1test1.yml', md5('user1test1.yml')),
                             [],
-                        ))->withJob(self::$user1JobLabel),
-                        (new Event(
+                        ),
+                        new Event(
+                            self::$user1JobLabel,
                             2,
                             'type_2',
                             new ResourceReference('user1test1.yml', md5('user1test1.yml')),
                             [],
-                        ))->withJob(self::$user1JobLabel),
+                        ),
                     ];
                 },
             ],
@@ -219,12 +223,13 @@ class ListEventsTest extends AbstractBaseTestCase
                 'type' => 'type_1',
                 'expectedEventsCreator' => function () {
                     return [
-                        (new Event(
+                        new Event(
+                            self::$user1JobLabel,
                             1,
                             'type_1',
                             new ResourceReference('user1test1.yml', md5('user1test1.yml')),
                             [],
-                        ))->withJob(self::$user1JobLabel),
+                        ),
                     ];
                 },
             ],
@@ -239,24 +244,27 @@ class ListEventsTest extends AbstractBaseTestCase
                 'type' => null,
                 'expectedEventsCreator' => function () {
                     return [
-                        (new Event(
+                        new Event(
+                            self::$user1JobLabel,
                             1,
                             'type_1',
                             new ResourceReference('user1test1.yml', md5('user1test1.yml')),
                             [],
-                        ))->withJob(self::$user1JobLabel),
-                        (new Event(
+                        ),
+                        new Event(
+                            self::$user1JobLabel,
                             2,
                             'type_2',
                             new ResourceReference('user1test1.yml', md5('user1test1.yml')),
                             [],
-                        ))->withJob(self::$user1JobLabel),
-                        (new Event(
+                        ),
+                        new Event(
+                            self::$user1JobLabel,
                             3,
                             'type_1',
                             new ResourceReference('user1test2.yml', md5('user1test2.yml')),
                             [],
-                        ))->withJob(self::$user1JobLabel),
+                        ),
                     ];
                 },
             ],
