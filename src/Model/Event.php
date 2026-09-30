@@ -6,8 +6,6 @@ namespace SmartAssert\ResultsClient\Model;
 
 class Event implements EventInterface
 {
-    private ResourceReferenceCollectionInterface $relatedReferences;
-
     /**
      * @param non-empty-string $job
      * @param positive-int     $sequenceNumber
@@ -20,15 +18,8 @@ class Event implements EventInterface
         public readonly string $type,
         public readonly ResourceReferenceInterface $resourceReference,
         public readonly array $body,
+        public readonly ?ResourceReferenceCollectionInterface $relatedReferences = null,
     ) {}
-
-    public function withRelatedReferences(ResourceReferenceCollectionInterface $relatedReferences): EventInterface
-    {
-        $event = new Event($this->job, $this->sequenceNumber, $this->type, $this->resourceReference, $this->body);
-        $event->relatedReferences = $relatedReferences;
-
-        return $event;
-    }
 
     public function toArray(): array
     {

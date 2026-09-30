@@ -77,7 +77,6 @@ class AddEventTest extends AbstractBaseTestCase
                     'event_type',
                     new ResourceReference('event_label_3', 'event_reference_3'),
                     [],
-                )->withRelatedReferences(
                     new ResourceReferenceCollection([
                         new ResourceReference('event_label_1', 'event_reference_1'),
                     ])
@@ -93,9 +92,10 @@ class AddEventTest extends AbstractBaseTestCase
                         'key3' => 'value3',
                         'key4' => 'value4',
                     ],
-                )->withRelatedReferences(new ResourceReferenceCollection([
-                    new ResourceReference('event_label_1', 'event_reference_1'),
-                ])),
+                    new ResourceReferenceCollection([
+                        new ResourceReference('event_label_1', 'event_reference_1'),
+                    ])
+                ),
             ],
         ];
     }
