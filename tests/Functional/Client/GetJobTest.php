@@ -75,6 +75,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
+                    null,
                     $addEventUrl,
                     new JobState(
                         'started',
@@ -105,6 +106,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
+                    null,
                     $addEventUrl,
                     new JobState(
                         'started',
@@ -139,6 +141,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
+                    null,
                     $addEventUrl,
                     new JobState(
                         'started',
@@ -173,6 +176,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
+                    null,
                     $addEventUrl,
                     new JobState(
                         'started',
@@ -204,6 +208,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
+                    null,
                     $addEventUrl,
                     new JobState(
                         'complete',
