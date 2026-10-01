@@ -19,6 +19,7 @@ readonly class JobFactory
         $responseDataInspector = new ArrayInspector($data);
 
         $label = $responseDataInspector->getNonEmptyString('label');
+        $token = $responseDataInspector->getNonEmptyString('token');
         $state = $responseDataInspector->getNonEmptyString('state');
         $eventAddUrl = $responseDataInspector->getNonEmptyString('event_add_url');
         $hasEvents = $responseDataInspector->getBoolean('has_events');
@@ -32,7 +33,14 @@ readonly class JobFactory
 
         $previousStates = $responseDataInspector->getNonEmptyStringArray('previous_states');
 
-        return new Job($label, $eventAddUrl, new JobState($state, $endState, $metaState), $hasEvents, $previousStates);
+        return new Job(
+            $label,
+            $token,
+            $eventAddUrl,
+            new JobState($state, $endState, $metaState),
+            $hasEvents,
+            $previousStates,
+        );
     }
 
     private function getJobMetaState(ArrayInspector $inspector): MetaState
