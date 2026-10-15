@@ -28,6 +28,16 @@ readonly class JobFactory
             return null;
         }
 
+        $eventNotifyUrl = null;
+
+        $eventNotifyData = $responseDataInspector->getArray('event_notify');
+        if ([] !== $eventNotifyData) {
+            $eventNotifyDataInspector = new ArrayInspector($eventNotifyData);
+
+            $eventNotifyUrl = $eventNotifyDataInspector->getNonEmptyString('url');
+            $token = $eventNotifyDataInspector->getNonEmptyString('token');
+        }
+
         $endState = $responseDataInspector->getNonEmptyString('end_state');
         $metaState = $this->getJobMetaState($responseDataInspector);
 
@@ -40,6 +50,7 @@ readonly class JobFactory
             new JobState($state, $endState, $metaState),
             $hasEvents,
             $previousStates,
+            $eventNotifyUrl,
         );
     }
 

@@ -100,9 +100,10 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
         $label = md5((string) rand());
         $token = md5((string) rand());
         $addEventUrl = 'https://example.com/event/add/' . md5((string) rand());
+        $eventNotifyUrl = 'https://example.com/worker_event/add/worker.event';
 
         return [
-            'created, no response token' => [
+            'created, no response token, no response event_notify' => [
                 'httpFixture' => new Response(
                     200,
                     [
@@ -127,9 +128,10 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
                     ),
                     false,
                     [],
+                    null,
                 ),
             ],
-            'created, has response token' => [
+            'created, has response token, no response event_notify' => [
                 'httpFixture' => new Response(
                     200,
                     [
@@ -155,6 +157,40 @@ class CreateJobTest extends AbstractClientModelCreationTestCase
                     ),
                     false,
                     [],
+                    null,
+                ),
+            ],
+            'created, has response token, has response event_notify' => [
+                'httpFixture' => new Response(
+                    200,
+                    [
+                        'content-type' => 'application/json',
+                    ],
+                    (string) json_encode([
+                        'label' => $label,
+                        'token' => $token,
+                        'event_add_url' => $addEventUrl,
+                        'state' => 'awaiting-events',
+                        'end_state' => null,
+                        'has_events' => false,
+                        'event_notify' => [
+                            'url' => $eventNotifyUrl,
+                            'token' => $token,
+                        ],
+                    ])
+                ),
+                'expected' => new Job(
+                    $label,
+                    $token,
+                    $addEventUrl,
+                    new JobState(
+                        'awaiting-events',
+                        null,
+                        new MetaState(ended: false, succeeded: false, pending: true)
+                    ),
+                    false,
+                    [],
+                    $eventNotifyUrl,
                 ),
             ],
         ];
