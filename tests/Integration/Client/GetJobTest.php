@@ -18,14 +18,14 @@ class GetJobTest extends AbstractBaseTestCase
 
         $job = self::$client->getJobStatus(self::$user1ApiToken, $jobLabel);
 
-        self::assertSame($jobLabel, $job->label);
+        self::assertSame($jobLabel, $job->getLabel());
         self::assertEquals(
             new JobState(
                 'awaiting-events',
                 null,
                 new MetaState(ended: false, succeeded: false, pending: true)
             ),
-            $job->state
+            $job->getState()
         );
     }
 }

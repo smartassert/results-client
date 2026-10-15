@@ -41,22 +41,22 @@ class ListEventsTest extends AbstractBaseTestCase
         $user2Test1Reference = new ResourceReference('user2test1.yml', md5('user2test1.yml'));
 
         self::$addEventClient->add(
-            self::$user1Job->authenticator,
+            self::$user1Job->getAuthenticator(),
             new Event(self::$user1JobLabel, 1, 'type_1', $user1Test1Reference, [])
         );
 
         self::$addEventClient->add(
-            self::$user1Job->authenticator,
+            self::$user1Job->getAuthenticator(),
             new Event(self::$user1JobLabel, 2, 'type_2', $user1Test1Reference, [])
         );
 
         self::$addEventClient->add(
-            self::$user1Job->authenticator,
+            self::$user1Job->getAuthenticator(),
             new Event(self::$user1JobLabel, 3, 'type_1', $user1Test2Reference, [])
         );
 
         self::$addEventClient->add(
-            self::$user2Job->authenticator,
+            self::$user2Job->getAuthenticator(),
             new Event(self::$user2JobLabel, 1, 'type_1', $user2Test1Reference, [])
         );
     }

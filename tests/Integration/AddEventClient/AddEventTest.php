@@ -39,7 +39,7 @@ class AddEventTest extends AbstractBaseTestCase
     public function testAddSuccess(Event $event): void
     {
         self::assertTrue(
-            self::$addEventClient->add(self::$user1Job->authenticator, $event),
+            self::$addEventClient->add(self::$user1Job->getAuthenticator(), $event),
         );
     }
 

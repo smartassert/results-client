@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Model;
 
-readonly class Job
+readonly class Job implements JobInterface
 {
     /**
      * @param non-empty-string   $label
@@ -13,12 +13,59 @@ readonly class Job
      * @param non-empty-string[] $previousStates
      */
     public function __construct(
-        public string $label,
-        public ?string $token,
-        public string $authenticator,
-        public JobState $state,
-        public bool $hasEvents,
-        public array $previousStates,
-        public ?string $eventNotifyUrl,
+        private string $label,
+        private ?string $token,
+        private string $authenticator,
+        private JobState $state,
+        private bool $hasEvents,
+        private array $previousStates,
+        private ?string $eventNotifyUrl,
     ) {}
+
+    /**
+     * @return non-empty-string
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * @return ?non-empty-string
+     */
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    public function getAuthenticator(): string
+    {
+        return $this->authenticator;
+    }
+
+    public function getState(): JobState
+    {
+        return $this->state;
+    }
+
+    public function hasEvents(): bool
+    {
+        return $this->hasEvents;
+    }
+
+    /**
+     * @return non-empty-string[]
+     */
+    public function getPreviousStates(): array
+    {
+        return $this->previousStates;
+    }
+
+    public function getEventNotifyUrl(): ?string
+    {
+        return $this->eventNotifyUrl;
+    }
 }

@@ -16,14 +16,14 @@ class CreateJobTest extends AbstractBaseTestCase
         $jobLabel = (string) new Ulid();
         $job = self::$client->createJob(self::$user1ApiToken, $jobLabel, null);
 
-        self::assertSame($jobLabel, $job->label);
+        self::assertSame($jobLabel, $job->getLabel());
         self::assertEquals(
             new JobState(
                 'awaiting-events',
                 null,
                 new MetaState(ended: false, succeeded: false, pending: true)
             ),
-            $job->state
+            $job->getState()
         );
     }
 }
