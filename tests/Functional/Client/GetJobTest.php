@@ -84,6 +84,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ),
                     false,
                     [],
+                    null,
                 ),
             ],
             'state=started, no end_state, no pending meta state, no previous states' => [
@@ -115,6 +116,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ),
                     false,
                     [],
+                    null,
                 ),
             ],
             'state=started, no end_state, no pending meta state, has previous states' => [
@@ -154,6 +156,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'previous_state_2',
                         'previous_state_3',
                     ],
+                    null,
                 ),
             ],
             'state=started, no end_state' => [
@@ -185,6 +188,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ),
                     true,
                     [],
+                    null,
                 ),
             ],
             'state=complete,end_state=ended' => [
@@ -217,6 +221,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ),
                     true,
                     [],
+                    null,
                 ),
             ],
         ];

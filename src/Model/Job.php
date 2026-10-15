@@ -19,5 +19,6 @@ readonly class Job
         public JobState $state,
         public bool $hasEvents,
         public array $previousStates,
+        public ?string $eventNotifyUrl,
     ) {}
 }
