@@ -7,7 +7,6 @@ namespace SmartAssert\ResultsClient\Tests\Integration;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
-use SmartAssert\ResultsClient\AddEventClient;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\EventFactory;
 use SmartAssert\ResultsClient\JobFactory;
@@ -30,7 +29,6 @@ abstract class AbstractBaseTestCase extends TestCase
     private const string BASE_URL = 'http://localhost:9081';
 
     protected static Client $client;
-    protected static AddEventClient $addEventClient;
 
     /**
      * @var non-empty-string
@@ -55,8 +53,6 @@ abstract class AbstractBaseTestCase extends TestCase
             ),
             new JobFactory(),
         );
-
-        self::$addEventClient = new AddEventClient($serviceClient);
 
         self::$user1ApiToken = self::createUserApiToken(self::USER1_EMAIL);
         self::$user1JobLabel = (string) new Ulid();
