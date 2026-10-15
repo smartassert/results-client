@@ -4,13 +4,22 @@ declare(strict_types=1);
 
 namespace SmartAssert\ResultsClient\Tests\Integration\Client;
 
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Http\Message\RequestInterface;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\ResourceReference;
 use SmartAssert\ResultsClient\Tests\Integration\AbstractBaseTestCase;
+use SmartAssert\SymfonyRemoteEventRequestFactory\Factory;
+use Symfony\Component\RemoteEvent\RemoteEvent;
 use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Webhook\Server\HeadersConfigurator;
+use Symfony\Component\Webhook\Server\HeaderSignatureConfigurator;
+use Symfony\Component\Webhook\Server\JsonBodyConfigurator;
+use Symfony\Component\Webhook\Server\NativeJsonPayloadSerializer;
 
 class ListEventsTest extends AbstractBaseTestCase
 {
@@ -40,25 +49,59 @@ class ListEventsTest extends AbstractBaseTestCase
         $user1Test2Reference = new ResourceReference('user1test2.yml', md5('user1test2.yml'));
         $user2Test1Reference = new ResourceReference('user2test1.yml', md5('user2test1.yml'));
 
-        self::$addEventClient->add(
-            self::$user1Job->getAuthenticator(),
-            new Event(self::$user1JobLabel, 1, 'type_1', $user1Test1Reference, [])
-        );
+        $httpClient = new HttpClient();
 
-        self::$addEventClient->add(
-            self::$user1Job->getAuthenticator(),
-            new Event(self::$user1JobLabel, 2, 'type_2', $user1Test1Reference, [])
-        );
+        $httpClient->send(self::createRemoteEventRequest(
+            [
+                'job' => self::$user1JobLabel,
+                'sequence_number' => 1,
+                'type' => 'type_1',
+                'label' => $user1Test1Reference->label,
+                'reference' => $user1Test1Reference->reference,
+                'body' => [],
+            ],
+            (string) self::$user1Job->getEventNotifyUrl(),
+            (string) self::$user1Job->getToken(),
+        ));
 
-        self::$addEventClient->add(
-            self::$user1Job->getAuthenticator(),
-            new Event(self::$user1JobLabel, 3, 'type_1', $user1Test2Reference, [])
-        );
+        $httpClient->send(self::createRemoteEventRequest(
+            [
+                'job' => self::$user1JobLabel,
+                'sequence_number' => 2,
+                'type' => 'type_2',
+                'label' => $user1Test1Reference->label,
+                'reference' => $user1Test1Reference->reference,
+                'body' => [],
+            ],
+            (string) self::$user1Job->getEventNotifyUrl(),
+            (string) self::$user1Job->getToken(),
+        ));
 
-        self::$addEventClient->add(
-            self::$user2Job->getAuthenticator(),
-            new Event(self::$user2JobLabel, 1, 'type_1', $user2Test1Reference, [])
-        );
+        $httpClient->send(self::createRemoteEventRequest(
+            [
+                'job' => self::$user1JobLabel,
+                'sequence_number' => 3,
+                'type' => 'type_1',
+                'label' => $user1Test2Reference->label,
+                'reference' => $user1Test2Reference->reference,
+                'body' => [],
+            ],
+            (string) self::$user1Job->getEventNotifyUrl(),
+            (string) self::$user1Job->getToken(),
+        ));
+
+        $httpClient->send(self::createRemoteEventRequest(
+            [
+                'job' => self::$user2JobLabel,
+                'sequence_number' => 1,
+                'type' => 'type_1',
+                'label' => $user2Test1Reference->label,
+                'reference' => $user2Test1Reference->reference,
+                'body' => [],
+            ],
+            (string) self::$user2Job->getEventNotifyUrl(),
+            (string) self::$user2Job->getToken(),
+        ));
     }
 
     /**
@@ -269,5 +312,31 @@ class ListEventsTest extends AbstractBaseTestCase
                 },
             ],
         ];
+    }
+
+    /**
+     * @param array<mixed> $payload
+     */
+    private static function createRemoteEventRequest(array $payload, string $uri, string $token): RequestInterface
+    {
+        $headersConfigurator = new HeadersConfigurator();
+
+        $serializer = new NativeJsonPayloadSerializer();
+
+        $jsonBodyConfigurator = new JsonBodyConfigurator($serializer);
+        $headerSignatureConfigurator = new HeaderSignatureConfigurator();
+
+        $remoteEventRequestFactory = new Factory(
+            $headersConfigurator,
+            $jsonBodyConfigurator,
+            $headerSignatureConfigurator,
+        );
+
+        $remoteEvent = new RemoteEvent('worker.event', (string) new Ulid(), $payload);
+
+        $addEventHeaders = $remoteEventRequestFactory->createHeaders($remoteEvent, $token);
+        $addEventBody = $remoteEventRequestFactory->createBody($remoteEvent, $token);
+
+        return new Request('POST', $uri, $addEventHeaders, $addEventBody);
     }
 }
