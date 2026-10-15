@@ -81,9 +81,11 @@
         "phpstan/phpstan-mockery": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^13",
+        "smartassert/symfony-remote-event-request-factory": "^0.1.0",
         "smartassert/test-authenticaton-provider-bundle": "^5.0",
         "squizlabs/php_codesniffer": "^4.0",
-        "symfony/uid": "^7.3",
+        "symfony/uid": "*",
+        "symfony/webhook": "*",
         "webignition/http-history-container": "^4.0"
     },
     "minimum-stability":"stable",
