@@ -6,8 +6,9 @@ namespace SmartAssert\ResultsClient;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
+use SmartAssert\ResultsClient\Model\CreatedJobInterface;
 use SmartAssert\ResultsClient\Model\EventInterface;
-use SmartAssert\ResultsClient\Model\Job;
+use SmartAssert\ResultsClient\Model\JobInterface;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
 use SmartAssert\ServiceClient\Exception\HttpResponseExceptionInterface;
 use SmartAssert\ServiceClient\Exception\InvalidModelDataException;
@@ -31,7 +32,7 @@ interface ClientInterface
      * @throws InvalidResponseTypeException
      * @throws UnauthorizedException
      */
-    public function createJob(string $token, string $label, ?string $notifyUrl): Job;
+    public function createJob(string $token, string $label, ?string $notifyUrl): CreatedJobInterface;
 
     /**
      * @param non-empty-string $token
@@ -46,7 +47,7 @@ interface ClientInterface
      * @throws InvalidResponseTypeException
      * @throws UnauthorizedException
      */
-    public function getJobStatus(string $token, string $label): Job;
+    public function getJobStatus(string $token, string $label): JobInterface;
 
     /**
      * @param non-empty-string      $token

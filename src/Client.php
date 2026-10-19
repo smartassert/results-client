@@ -8,8 +8,11 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
 use Psr\Http\Client\RequestExceptionInterface;
 use SmartAssert\ArrayInspector\ArrayInspector;
+use SmartAssert\ResultsClient\Model\CreatedJob;
+use SmartAssert\ResultsClient\Model\CreatedJobInterface;
 use SmartAssert\ResultsClient\Model\EventInterface;
 use SmartAssert\ResultsClient\Model\Job;
+use SmartAssert\ResultsClient\Model\JobInterface;
 use SmartAssert\ServiceClient\Authentication\BearerAuthentication;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\Exception\CurlExceptionInterface;
@@ -31,18 +34,18 @@ readonly class Client implements ClientInterface
         private JobFactory $jobFactory,
     ) {}
 
-    public function createJob(string $token, string $label, ?string $notifyUrl): Job
+    public function createJob(string $token, string $label, ?string $notifyUrl): CreatedJobInterface
     {
         $response = $this->makeJobCreationRequest($token, $label, $notifyUrl);
 
-        return $this->createJobModel($response);
+        return $this->createCreatedJobModel($response);
     }
 
-    public function getJobStatus(string $token, string $label): Job
+    public function getJobStatus(string $token, string $label): JobInterface
     {
         $response = $this->makeJobRetrievalRequest($token, $label);
 
-        return $this->createJobModel($response);
+        return $this->createRetrievedJobModel($response);
     }
 
     public function listEvents(string $token, string $jobLabel, ?string $reference, ?string $type): array
@@ -63,7 +66,7 @@ readonly class Client implements ClientInterface
         }
 
         $response = $this->serviceClient->sendRequestForJson(
-            (new Request('GET', $url))->withAuthentication(new BearerAuthentication($token))
+            new Request('GET', $url)->withAuthentication(new BearerAuthentication($token))
         );
 
         $events = [];
@@ -86,9 +89,23 @@ readonly class Client implements ClientInterface
      * @throws InvalidModelDataException
      * @throws InvalidResponseDataException
      */
-    private function createJobModel(JsonResponse $response): Job
+    private function createCreatedJobModel(JsonResponse $response): CreatedJobInterface
     {
-        $job = $this->jobFactory->create($response->getData());
+        $job = $this->jobFactory->createForNewJob($response->getData());
+        if (null === $job) {
+            throw InvalidModelDataException::fromJsonResponse(CreatedJob::class, $response);
+        }
+
+        return $job;
+    }
+
+    /**
+     * @throws InvalidModelDataException
+     * @throws InvalidResponseDataException
+     */
+    private function createRetrievedJobModel(JsonResponse $response): JobInterface
+    {
+        $job = $this->jobFactory->createForExistingJob($response->getData());
         if (null === $job) {
             throw InvalidModelDataException::fromJsonResponse(Job::class, $response);
         }
