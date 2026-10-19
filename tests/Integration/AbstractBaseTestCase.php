@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\ResultsClient\Client;
 use SmartAssert\ResultsClient\EventFactory;
 use SmartAssert\ResultsClient\JobFactory;
-use SmartAssert\ResultsClient\Model\Job;
+use SmartAssert\ResultsClient\Model\CreatedJobInterface;
 use SmartAssert\ResultsClient\ResourceReferenceFactory;
 use SmartAssert\ServiceClient\Client as ServiceClient;
 use SmartAssert\ServiceClient\ExceptionFactory\CurlExceptionFactory;
@@ -39,7 +39,7 @@ abstract class AbstractBaseTestCase extends TestCase
      * @var non-empty-string
      */
     protected static string $user1JobLabel;
-    protected static Job $user1Job;
+    protected static CreatedJobInterface $user1Job;
 
     public static function setUpBeforeClass(): void
     {

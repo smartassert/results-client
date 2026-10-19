@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use SmartAssert\ResultsClient\Model\Job;
+use SmartAssert\ResultsClient\Model\JobInterface;
 use SmartAssert\ResultsClient\Model\JobState;
 use SmartAssert\ResultsClient\Model\MetaState;
 
@@ -23,7 +24,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
             ['content-type' => 'application/json'],
             (string) json_encode([
                 'label' => $jobLabel,
-                'event_add_url' => $addEventUrl,
                 'state' => 'awaiting-events',
                 'end_state' => null,
                 'has_events' => false,
@@ -40,7 +40,7 @@ class GetJobTest extends AbstractClientModelCreationTestCase
     }
 
     #[DataProvider('getJobStatusSuccessDataProvider')]
-    public function testGetJobStatusSuccess(ResponseInterface $httpFixture, Job $expected): void
+    public function testGetJobStatusSuccess(ResponseInterface $httpFixture, JobInterface $expected): void
     {
         $this->mockHandler->append($httpFixture);
 
@@ -64,7 +64,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ],
                     (string) json_encode([
                         'label' => 'label',
-                        'event_add_url' => $addEventUrl,
                         'state' => 'started',
                         'meta_state' => [
                             'ended' => false,
@@ -75,8 +74,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
-                    null,
-                    $addEventUrl,
                     new JobState(
                         'started',
                         null,
@@ -84,7 +81,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ),
                     false,
                     [],
-                    null,
                 ),
             ],
             'state=started, no end_state, no pending meta state, no previous states' => [
@@ -95,7 +91,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ],
                     (string) json_encode([
                         'label' => 'label',
-                        'event_add_url' => $addEventUrl,
                         'state' => 'started',
                         'meta_state' => [
                             'ended' => false,
@@ -107,8 +102,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
-                    null,
-                    $addEventUrl,
                     new JobState(
                         'started',
                         null,
@@ -116,7 +109,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ),
                     false,
                     [],
-                    null,
                 ),
             ],
             'state=started, no end_state, no pending meta state, has previous states' => [
@@ -127,7 +119,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ],
                     (string) json_encode([
                         'label' => 'label',
-                        'event_add_url' => $addEventUrl,
                         'state' => 'started',
                         'meta_state' => [
                             'ended' => false,
@@ -143,8 +134,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
-                    null,
-                    $addEventUrl,
                     new JobState(
                         'started',
                         null,
@@ -156,7 +145,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                         'previous_state_2',
                         'previous_state_3',
                     ],
-                    null,
                 ),
             ],
             'state=started, no end_state' => [
@@ -167,7 +155,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ],
                     (string) json_encode([
                         'label' => 'label',
-                        'event_add_url' => $addEventUrl,
                         'state' => 'started',
                         'meta_state' => [
                             'ended' => false,
@@ -179,8 +166,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
-                    null,
-                    $addEventUrl,
                     new JobState(
                         'started',
                         null,
@@ -188,7 +173,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ),
                     true,
                     [],
-                    null,
                 ),
             ],
             'state=complete,end_state=ended' => [
@@ -199,7 +183,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ],
                     (string) json_encode([
                         'label' => 'label',
-                        'event_add_url' => $addEventUrl,
                         'state' => 'complete',
                         'end_state' => 'ended',
                         'meta_state' => [
@@ -212,8 +195,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                 ),
                 'expected' => new Job(
                     'label',
-                    null,
-                    $addEventUrl,
                     new JobState(
                         'complete',
                         'ended',
@@ -221,7 +202,6 @@ class GetJobTest extends AbstractClientModelCreationTestCase
                     ),
                     true,
                     [],
-                    null,
                 ),
             ],
         ];

@@ -8,9 +8,9 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\RequestInterface;
+use SmartAssert\ResultsClient\Model\CreatedJobInterface;
 use SmartAssert\ResultsClient\Model\Event;
 use SmartAssert\ResultsClient\Model\EventInterface;
-use SmartAssert\ResultsClient\Model\Job;
 use SmartAssert\ResultsClient\Model\ResourceReference;
 use SmartAssert\ResultsClient\Tests\Integration\AbstractBaseTestCase;
 use SmartAssert\SymfonyRemoteEventRequestFactory\Factory;
@@ -32,7 +32,7 @@ class ListEventsTest extends AbstractBaseTestCase
      * @var non-empty-string
      */
     private static string $user2JobLabel;
-    private static Job $user2Job;
+    private static CreatedJobInterface $user2Job;
 
     public static function setUpBeforeClass(): void
     {
@@ -60,8 +60,8 @@ class ListEventsTest extends AbstractBaseTestCase
                 'reference' => $user1Test1Reference->reference,
                 'body' => [],
             ],
-            (string) self::$user1Job->getEventNotifyUrl(),
-            (string) self::$user1Job->getToken(),
+            self::$user1Job->getEventNotifyUrl(),
+            self::$user1Job->getEventNotifyToken(),
         ));
 
         $httpClient->send(self::createRemoteEventRequest(
@@ -73,8 +73,8 @@ class ListEventsTest extends AbstractBaseTestCase
                 'reference' => $user1Test1Reference->reference,
                 'body' => [],
             ],
-            (string) self::$user1Job->getEventNotifyUrl(),
-            (string) self::$user1Job->getToken(),
+            self::$user1Job->getEventNotifyUrl(),
+            self::$user1Job->getEventNotifyToken(),
         ));
 
         $httpClient->send(self::createRemoteEventRequest(
@@ -86,8 +86,8 @@ class ListEventsTest extends AbstractBaseTestCase
                 'reference' => $user1Test2Reference->reference,
                 'body' => [],
             ],
-            (string) self::$user1Job->getEventNotifyUrl(),
-            (string) self::$user1Job->getToken(),
+            self::$user1Job->getEventNotifyUrl(),
+            self::$user1Job->getEventNotifyToken(),
         ));
 
         $httpClient->send(self::createRemoteEventRequest(
@@ -99,8 +99,8 @@ class ListEventsTest extends AbstractBaseTestCase
                 'reference' => $user2Test1Reference->reference,
                 'body' => [],
             ],
-            (string) self::$user2Job->getEventNotifyUrl(),
-            (string) self::$user2Job->getToken(),
+            self::$user2Job->getEventNotifyUrl(),
+            self::$user2Job->getEventNotifyToken(),
         ));
     }
 

@@ -11,16 +11,6 @@ interface JobInterface
      */
     public function getLabel(): string;
 
-    /**
-     * @return ?non-empty-string
-     */
-    public function getToken(): ?string;
-
-    /**
-     * @return non-empty-string
-     */
-    public function getAuthenticator(): string;
-
     public function getState(): JobState;
 
     public function hasEvents(): bool;
@@ -29,6 +19,4 @@ interface JobInterface
      * @return non-empty-string[]
      */
     public function getPreviousStates(): array;
-
-    public function getEventNotifyUrl(): ?string;
 }
